@@ -1,5 +1,8 @@
 package app;
 
+import resource.tools.FAMIXResourceTool;
+import resource.tools.MGResourceTool;
+
 public class App {
 
 	public static void main(String[] args) {
