@@ -41,6 +41,7 @@ public class MGResourceTool extends ResourceTool {
 	}
 
 	public void process(String workspace){
+		//TODO: parameterize
 		String dbName = "MGGitWS";
 		String outputPath = workspace+"/model-source.mg";
 		String outputPathFromDB = workspace+"/model.mg";
@@ -48,7 +49,7 @@ public class MGResourceTool extends ResourceTool {
 		
 		String mappingRefFilePath = "/home/philip-iii/Dev/workspaces/emf/MininGit.m1x/mapping/mg-ref.hbm.xml";
 		mappingFilePath = "/mg.hbm.xml"; //relative to mapping which should be in the class path
-		mappingFilePath = "/mg-core.hbm.xml"; //core
+//		mappingFilePath = "/mg-core.hbm.xml"; //core
 		
 //		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 		initializeDB(dbName);
@@ -142,7 +143,18 @@ public class MGResourceTool extends ResourceTool {
 				Query updateQuery = session.createQuery("UPDATE "+c+" SET repository = '"+repository_id+"'");
 				updateQuery.executeUpdate();
 			}
+			
+			//add a commit_id column to store a copy of scmlog.id
+			Query alterQuery = session.createSQLQuery("ALTER TABLE scmlog ADD COLUMN commit_id INTEGER NOT NULL;");
+			alterQuery.executeUpdate();
+			
+			//set commit_id = id
+			Query updateQuery = session.createQuery("UPDATE scmlog s SET s.commit_id = s.id");
+			updateQuery.executeUpdate();
+			
 			log.info("  ...done");
+			
+			
 		}
 
 		session.close();

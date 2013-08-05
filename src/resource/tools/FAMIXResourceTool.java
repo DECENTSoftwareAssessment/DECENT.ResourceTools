@@ -39,9 +39,9 @@ public class FAMIXResourceTool extends ResourceTool {
 	
 	public void process(String workspace, int commitId) {
 
-		String xTextLocation = workspace+"/famix.mse";
-		String outputPath = workspace+"/famix.famix";
-		String outputPathValidated = workspace+"/famix.famix";
+		String xTextLocation = workspace+"/model.mse";
+		String outputPath = workspace+"/model.famix";
+		String outputPathValidated = workspace+"/model.famix";
 		String extension = "famix";
 
 		Resource resource = loadResourceFromXtext(workspace,xTextLocation);
