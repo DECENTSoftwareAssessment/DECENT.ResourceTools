@@ -29,6 +29,7 @@ import org.eclipse.ocl.common.OCLConstants;
 import org.eclipse.ocl.ecore.delegate.OCLInvocationDelegateFactory;
 import org.eclipse.ocl.ecore.delegate.OCLSettingDelegateFactory;
 import org.eclipse.ocl.ecore.delegate.OCLValidationDelegateFactory;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.hibernate.cfg.Environment;
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ public class ResourceTool {
 	protected String dbServer = "localhost";
 	protected String dbUser = "cvsanaly";
 	protected String dbPass = "cvsanaly";
+	protected Injector injector;
 
 	public ResourceTool() {
 		System.setProperty(Logger.class.getName(),SimpleLogger.class.getName());
@@ -56,12 +58,17 @@ public class ResourceTool {
 		log = LoggerFactory.getLogger(ResourceTool.class);	
 	}
 
-	public Resource loadResourceFromXtext(String workspace, String pathName) {
+	public Resource loadResourceFromXtext(String workspace, String pathName, boolean resolveAll) {
 		// "workspace" is a string that contains the path to the workspace containing the DSL program.
 		new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri(workspace);
-	
-		Injector injector = new M3xStandaloneSetup().createInjectorAndDoEMFRegistration();
+		
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+
+		//TODO:why is this not needed for FAMIX but needed for DAG?
+		if (resolveAll) {
+			resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+		}
+
 		Resource resource = resourceSet.getResource(URI.createURI(pathName), true);
 		for (org.eclipse.emf.ecore.resource.Resource.Diagnostic diagnostic : resource.getErrors()) {
 			log.warn("xtext: "+diagnostic.getLine() +" :"+diagnostic.getMessage());

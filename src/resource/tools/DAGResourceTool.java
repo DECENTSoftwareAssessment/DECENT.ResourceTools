@@ -13,45 +13,41 @@ import org.eclipse.emf.ecore.util.EObjectValidator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.LoggerFactory;
 
-
-import famix.M3xStandaloneSetup;
-
 import AbstractDECENTProvider.AbstractDECENTProviderPackage;
 import AbstractDECENTProvider.AbstractElement;
 import AbstractDECENTProvider.AbstractNamedElement;
 import AbstractDECENTProvider.Model;
+import DAG.DAGPackage;
+import DAG.impl.DAGPackageImpl;
+import DAGx.DAGxStandaloneSetup;
 import FAMIX.FAMIXPackage;
 import FAMIX.impl.FAMIXPackageImpl;
 
-public class FAMIXResourceTool extends ResourceTool {
+public class DAGResourceTool extends ResourceTool {
 	
-	public FAMIXResourceTool(){
+	public DAGResourceTool(){
 		super();
-		log = LoggerFactory.getLogger(FAMIXResourceTool.class);
-		FAMIXPackageImpl.init();
+		log = LoggerFactory.getLogger(DAGResourceTool.class);
+		DAGPackageImpl.init();
 		initializeValidator();
-		injector = new M3xStandaloneSetup().createInjectorAndDoEMFRegistration();
-
+		injector = new DAGxStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
 	
 	@Override
 	protected void initializeValidator(){
 		super.initializeValidator();
 		EObjectValidator validator = new EObjectValidator();
-		EValidator.Registry.INSTANCE.put(AbstractDECENTProviderPackage.eINSTANCE, validator);
-	    EValidator.Registry.INSTANCE.put(FAMIXPackage.eINSTANCE, validator);
+	    EValidator.Registry.INSTANCE.put(DAGPackage.eINSTANCE, validator);
 	}
 	
-	public void process(String workspace, int commitId) {
+	public void process(String workspace) {
 
-		String xTextLocation = workspace+"/model.mse";
-		String outputPath = workspace+"/model.famix";
-		String outputPathValidated = workspace+"/model.famix";
-		String extension = "famix";
+		String xTextLocation = workspace+"/model.dagx";
+		String outputPath = workspace+"/model.dag";
+		String outputPathValidated = workspace+"/model.dag";
+		String extension = "dag";
 
-		Resource resource = loadResourceFromXtext(workspace,xTextLocation,false);
-		virtualizeUnresolvedProxies(resource);
-		setRevisionAndGUIDs(resource, commitId);
+		Resource resource = loadResourceFromXtext(workspace,xTextLocation,true);
 		storeResourceContents(resource.getContents(), outputPath);
 		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 //	    validateResource(fromXMI);
@@ -83,7 +79,7 @@ public class FAMIXResourceTool extends ResourceTool {
 	}
 
 	public void initializeDB(String dbName) {
-		EPackage[] epackages = new EPackage[] { FAMIXPackage.eINSTANCE,AbstractDECENTProviderPackage.eINSTANCE };
+		EPackage[] epackages = new EPackage[] { DAGPackage.eINSTANCE };
 		super.initializeDB(dbName, epackages);
 	}
 	
