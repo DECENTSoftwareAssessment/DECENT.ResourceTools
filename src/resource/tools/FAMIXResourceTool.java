@@ -44,6 +44,7 @@ public class FAMIXResourceTool extends ResourceTool {
 	
 	public void process(String workspace, int commitId) {
 
+		//TODO: extract as configuration
 		String xTextLocation = workspace+"/model.mse";
 		String outputPath = workspace+"/model.famix";
 		String outputPathValidated = workspace+"/model.famix";

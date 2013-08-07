@@ -40,9 +40,8 @@ public class MGResourceTool extends ResourceTool {
 	    EValidator.Registry.INSTANCE.put(MGStandalonePackage.eINSTANCE, validator);
 	}
 
-	public void process(String workspace){
+	public void process(String workspace, String dbName){
 		//TODO: parameterize
-		String dbName = "MGGitWS";
 		String outputPath = workspace+"/model-source.mg";
 		String outputPathFromDB = workspace+"/model.mg";
 		String extension = "mg";

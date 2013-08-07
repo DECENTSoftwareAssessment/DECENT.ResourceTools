@@ -23,8 +23,10 @@ public class App {
 
 		workspace = "/home/philip-iii/TEMP/fmx";
 //		workspace = "/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input";
-//		MGResourceTool mgTool = new MGResourceTool();
-//		mgTool.process(workspace);
+		
+		String dbName = "MGGitWS";
+		MGResourceTool mgTool = new MGResourceTool();
+		mgTool.process(workspace,dbName);
 	}
 
 }
