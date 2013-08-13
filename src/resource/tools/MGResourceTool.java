@@ -49,6 +49,7 @@ public class MGResourceTool extends ResourceTool {
 		String mappingRefFilePath = "/home/philip-iii/Dev/workspaces/emf/MininGit.m1x/mapping/mg-ref.hbm.xml";
 		mappingFilePath = "/mg.hbm.xml"; //relative to mapping which should be in the class path
 //		mappingFilePath = "/mg-core.hbm.xml"; //core
+		mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
 		
 //		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 		initializeDB(dbName);
@@ -57,7 +58,7 @@ public class MGResourceTool extends ResourceTool {
 
 //	    storeResourceInDB(fromXMI.getContents(),dbName);
 	    Resource fromDB = loadResourceFromDB(dbName);
-		storeResourceContents(fromDB.getContents(), outputPathFromDB);
+		storeResourceContents(fromDB.getContents(), outputPathFromDB, extension);
 	}
 	
 	public void initializeDB(String dbName) {

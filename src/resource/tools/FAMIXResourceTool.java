@@ -53,10 +53,10 @@ public class FAMIXResourceTool extends ResourceTool {
 		Resource resource = loadResourceFromXtext(workspace,xTextLocation,false);
 		virtualizeUnresolvedProxies(resource);
 		setRevisionAndGUIDs(resource, commitId);
-		storeResourceContents(resource.getContents(), outputPath);
+		storeResourceContents(resource.getContents(), outputPath, extension);
 		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 //	    validateResource(fromXMI);
-		storeResourceContents(fromXMI.getContents(), outputPathValidated);
+		storeResourceContents(fromXMI.getContents(), outputPathValidated, extension);
 
 	}
 	
