@@ -175,5 +175,6 @@
 	<classpathentry kind="src" path="/MininGit.m1x"/>
 	<classpathentry kind="src" path="/dag.m1"/>
 	<classpathentry kind="src" path="/dag.m1x"/>
+	<classpathentry kind="src" path="/DECENT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
