@@ -139,16 +139,16 @@ public class MGResourceTool extends ResourceTool {
 			//TODO: need to extend with other classes too
 			String[] classes = new String[]{"Action","Branch","FileCopy","FileLink","People","Tag"};
 			for (String c : classes) {
-				Query updateQuery = session.createQuery("UPDATE "+c+" SET repository = '"+repository_id+"'");
+				Query updateQuery = session.createQuery("UPDATE "+c+" SET repository = "+repository_id+"");
 				updateQuery.executeUpdate();
 			}
 			
 			//add a commit_id column to store a copy of scmlog.id
-			Query alterQuery = session.createSQLQuery("ALTER TABLE scmlog ADD COLUMN commit_id INTEGER NOT NULL;");
-			alterQuery.executeUpdate();
+//			Query alterQuery = session.createSQLQuery("ALTER TABLE scmlog ADD COLUMN commit_id INTEGER NOT NULL;");
+//			alterQuery.executeUpdate();
 			
 			//set commit_id = id
-			Query updateQuery = session.createQuery("UPDATE scmlog s SET s.commit_id = s.id");
+			Query updateQuery = session.createSQLQuery("UPDATE scmlog s SET s.commit_id = s.id");
 			updateQuery.executeUpdate();
 			
 			logInfo("  ...done");
