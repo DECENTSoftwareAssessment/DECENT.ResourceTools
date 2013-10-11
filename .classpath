@@ -9,8 +9,5 @@
 	<classpathentry kind="src" path="/dag.m1x"/>
 	<classpathentry kind="src" path="/DECENT"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-ext-1.7.2.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -11,8 +11,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectValidator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.slf4j.LoggerFactory;
 
+import emf.resource.tools.ResourceTool;
 import AbstractDECENTProvider.AbstractDECENTProviderPackage;
 import AbstractDECENTProvider.AbstractElement;
 import AbstractDECENTProvider.AbstractNamedElement;
@@ -26,8 +26,7 @@ import FAMIX.impl.FAMIXPackageImpl;
 public class DAGResourceTool extends ResourceTool {
 	
 	public DAGResourceTool(){
-		super();
-		log = LoggerFactory.getLogger(DAGResourceTool.class);
+		super(DAGResourceTool.class.getName());
 		DAGPackageImpl.init();
 		initializeValidator();
 		injector = new DAGxStandaloneSetup().createInjectorAndDoEMFRegistration();

@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.emf.common,
  org.eclipse.emf.teneo,
  org.eclipse.emf.teneo.annotations,
  org.eclipse.emf.teneo.hibernate,
- org.eclipse.emf.teneo.hibernate.mapper
+ org.eclipse.emf.teneo.hibernate.mapper,
+ emf.resource.tools
 Export-Package: app,
  resource.tools

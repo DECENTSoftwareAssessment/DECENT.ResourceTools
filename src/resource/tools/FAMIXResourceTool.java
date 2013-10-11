@@ -11,11 +11,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectValidator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.slf4j.LoggerFactory;
 
-
+import emf.resource.tools.ResourceTool;
 import famix.M3xStandaloneSetup;
-
 import AbstractDECENTProvider.AbstractDECENTProviderPackage;
 import AbstractDECENTProvider.AbstractElement;
 import AbstractDECENTProvider.AbstractNamedElement;
@@ -26,8 +24,7 @@ import FAMIX.impl.FAMIXPackageImpl;
 public class FAMIXResourceTool extends ResourceTool {
 	
 	public FAMIXResourceTool(){
-		super();
-		log = LoggerFactory.getLogger(FAMIXResourceTool.class);
+		super(FAMIXResourceTool.class.getName());
 		FAMIXPackageImpl.init();
 		initializeValidator();
 		injector = new M3xStandaloneSetup().createInjectorAndDoEMFRegistration();

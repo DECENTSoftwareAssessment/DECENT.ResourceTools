@@ -14,8 +14,8 @@ import org.eclipse.emf.teneo.hibernate.HbDataStore;
 import org.eclipse.emf.teneo.hibernate.HbHelper;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.slf4j.LoggerFactory;
 
+import emf.resource.tools.ResourceTool;
 import AbstractDECENTProvider.AbstractDECENTProviderPackage;
 import MGStandalone.MGStandalonePackage;
 import MGStandalone.impl.MGStandalonePackageImpl;
@@ -26,9 +26,8 @@ public class MGResourceTool extends ResourceTool {
 	private String mappingFilePath;
 	
 	public MGResourceTool() {
-		super();
+		super(MGResourceTool.class.getName());
 		MGStandalonePackageImpl.init();
-		log = LoggerFactory.getLogger(MGResourceTool.class);
 		initializeValidator();
 	}
 
@@ -114,7 +113,7 @@ public class MGResourceTool extends ResourceTool {
 		//check if first run (whether the dummy top-level file has been created) and do some tune up
 		Query checkQuery = session.createQuery("FROM File WHERE id = '-1'");
 		if (checkQuery.list().size() == 0){
-			log.info("First run! Adjusting database...");
+			logInfo("First run! Adjusting database...");
 			int repository_id = 1;
 			String directoryFileType = "directory";
 
@@ -152,7 +151,7 @@ public class MGResourceTool extends ResourceTool {
 			Query updateQuery = session.createQuery("UPDATE scmlog s SET s.commit_id = s.id");
 			updateQuery.executeUpdate();
 			
-			log.info("  ...done");
+			logInfo("  ...done");
 			
 			
 		}

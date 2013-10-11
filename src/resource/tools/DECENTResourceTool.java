@@ -11,8 +11,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectValidator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.slf4j.LoggerFactory;
 
+import emf.resource.tools.ResourceTool;
 import DECENT.DECENTPackage;
 import DECENT.Model;
 import DECENT.impl.DECENTPackageImpl;
@@ -20,8 +20,7 @@ import DECENT.impl.DECENTPackageImpl;
 public class DECENTResourceTool extends ResourceTool {
 	
 	public DECENTResourceTool(){
-		super();
-		log = LoggerFactory.getLogger(DECENTResourceTool.class);
+		super(DECENTResourceTool.class.getName());
 		DECENTPackageImpl.init();
 		initializeValidator();
 		injector = null;
