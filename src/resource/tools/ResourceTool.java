@@ -49,6 +49,7 @@ public class ResourceTool {
 	protected String dbServer = "localhost";
 	protected String dbUser = "cvsanaly";
 	protected String dbPass = "cvsanaly";
+	protected String dbPort = "3306";
 	protected Injector injector;
 
 	public ResourceTool() {
@@ -174,7 +175,7 @@ public class ResourceTool {
 	protected Properties initializeDataStoreProperties(String dbServer, String dbName, String dbUser, String dbPass) {
 		Properties props = new Properties();
 		props.setProperty(Environment.DRIVER, "com.mysql.jdbc.Driver");
-		props.setProperty(Environment.URL, "jdbc:mysql://"+dbServer+":3306/"+dbName);
+		props.setProperty(Environment.URL, "jdbc:mysql://"+dbServer+":"+dbPort+"/"+dbName);
 		props.setProperty(Environment.USER, dbUser);
 		props.setProperty(Environment.PASS, dbPass);
 		props.setProperty(Environment.DIALECT,  org.hibernate.dialect.MySQL5InnoDBDialect.class.getName());
