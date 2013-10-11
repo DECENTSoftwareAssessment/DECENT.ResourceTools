@@ -1,5 +1,13 @@
 package app;
 
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+
+import org.apache.commons.io.FileUtils;
+
 import resource.tools.DAGResourceTool;
 import resource.tools.DECENTResourceTool;
 import resource.tools.FAMIXResourceTool;
@@ -10,13 +18,40 @@ public class App {
 	public static void main(String[] args) {
 		String workspace = "";
 
-		for (int i = 1; i<=50; i++) {
-			int commitId = i;
-			workspace = "/home/philip-iii/TEMP/fmx/famix/"+commitId;
+		
+		workspace = "/home/philip-iii/TEMP/fmx/famix/";
+		workspace = args[0];
+		File ws = new File(workspace);
+		String[] commits = ws.list();
+		Arrays.sort(commits, new Comparator<String>() {
 
+			@Override
+			public int compare(String o1, String o2) {
+				if (o1.equals(o2)) {
+					return 0;
+				} else if (Integer.parseInt(o1)>Integer.parseInt(o2)){
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+		});
+		
+		for (String c : commits) {
+			if (c.equals("3")) {
+			System.out.println("Processing: "+c);
 			FAMIXResourceTool famixTool = new FAMIXResourceTool();
-			famixTool.process(workspace, commitId);
+			famixTool.process(workspace+c, Integer.parseInt(c));
+			}
 		}
+		
+//		for (int i = 1; i<=2; i++) {
+//			int commitId = i;
+//			workspace = "/home/philip-iii/TEMP/fmx/famix/"+commitId;
+//
+//			FAMIXResourceTool famixTool = new FAMIXResourceTool();
+//			famixTool.process(workspace, commitId);
+//		}
 		
 		workspace = "/home/philip-iii/TEMP/fmx/dag";
 //		DAGResourceTool dagTool = new DAGResourceTool();
