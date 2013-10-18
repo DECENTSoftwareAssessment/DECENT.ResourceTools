@@ -17,8 +17,8 @@ import org.hibernate.Session;
 
 import emf.resource.tools.ResourceTool;
 import AbstractDECENTProvider.AbstractDECENTProviderPackage;
-import MGStandalone.MGStandalonePackage;
-import MGStandalone.impl.MGStandalonePackageImpl;
+import MG.MGPackage;
+import MG.impl.MGPackageImpl;
 
 public class MGResourceTool extends ResourceTool {
 
@@ -27,7 +27,7 @@ public class MGResourceTool extends ResourceTool {
 	
 	public MGResourceTool() {
 		super(MGResourceTool.class.getName());
-		MGStandalonePackageImpl.init();
+		MGPackageImpl.init();
 		initializeValidator();
 	}
 
@@ -36,7 +36,7 @@ public class MGResourceTool extends ResourceTool {
 		super.initializeValidator();
 		EObjectValidator validator = new EObjectValidator();
 		EValidator.Registry.INSTANCE.put(AbstractDECENTProviderPackage.eINSTANCE, validator);
-	    EValidator.Registry.INSTANCE.put(MGStandalonePackage.eINSTANCE, validator);
+	    EValidator.Registry.INSTANCE.put(MGPackage.eINSTANCE, validator);
 	}
 
 	public void process(String workspace, String dbName){
@@ -45,7 +45,7 @@ public class MGResourceTool extends ResourceTool {
 		String outputPathFromDB = workspace+"/model.mg";
 		String extension = "mg";
 		
-		String mappingRefFilePath = "/home/philip-iii/Dev/workspaces/emf/MininGit.m1x/mapping/mg-ref.hbm.xml";
+		String mappingRefFilePath = "/home/philip-iii/Dev/workspaces/emf/DECENT.ResourceTools/mapping/mg-ref.hbm.xml";
 		mappingFilePath = "/mg.hbm.xml"; //relative to mapping which should be in the class path
 //		mappingFilePath = "/mg-core.hbm.xml"; //core
 		mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
@@ -61,7 +61,7 @@ public class MGResourceTool extends ResourceTool {
 	}
 	
 	public void initializeDB(String dbName) {
-		EPackage[] epackages = new EPackage[] { MGStandalonePackage.eINSTANCE};
+		EPackage[] epackages = new EPackage[] { MGPackage.eINSTANCE};
 		initializeDB(dbName, epackages);
 	}
 
@@ -77,7 +77,7 @@ public class MGResourceTool extends ResourceTool {
 		//TODO: figure out selective mapping
 		props.setProperty(PersistenceOptions.MAPPING_FILE_PATH, mappingFilePath);
 
-		// props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+//		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
 		hbds.setDataStoreProperties(props);
 		hbds.setEPackages(epackages);
 		hbds.initialize();
