@@ -19,6 +19,12 @@ Require-Bundle: org.eclipse.emf.common,
  org.eclipse.emf.teneo.annotations,
  org.eclipse.emf.teneo.hibernate,
  org.eclipse.emf.teneo.hibernate.mapper,
- emf.resource.tools
+ emf.resource.tools,
+ FAMIX,
+ MG,
+ DECENT,
+ DAG,
+ dag.m1x,
+ famix.m3x
 Export-Package: app,
  resource.tools
