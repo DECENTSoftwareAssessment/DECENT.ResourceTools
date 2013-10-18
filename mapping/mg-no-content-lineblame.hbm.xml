@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false">
+    <class name="MG.impl.ModelImpl" entity-name="Model" abstract="false" lazy="false" table="repositories">
+        <meta attribute="eclassName" inherit="false">Model</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+        <property name="name" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="name"/>
+        </property>
+        <property name="type" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="type"/>
+        </property>
+        <property name="uri" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="uri"/>
+        </property>
+        <bag name="people" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+            <key update="true">
+                <column name="repository_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="People"/>
+        </bag>
+        <bag name="revisions" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+            <key update="true">
+                <column name="repository_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="Revision"/>
+        </bag>
+        <bag name="actions" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+            <key update="true">
+                <column name="repository_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="Action"/>
+        </bag>
+        <bag name="files" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+            <key update="true">
+                <column name="repository_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="File"/>
+        </bag>
+        <bag name="branches" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+            <key update="true">
+                <column name="repository_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="Branch"/>
+        </bag>
+		<bag name="fileTypes" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="repository_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="FileType"/>
+		</bag>
+		<bag name="fileLinks" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="repository_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="FileLink"/>
+		</bag>
+		<bag name="fileCopies" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="repository_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="FileCopy"/>
+		</bag>
+		<bag name="tags" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="repository_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Tag"/>
+		</bag>
+    </class>
+    <class name="MG.impl.PeopleImpl" entity-name="People" abstract="false" lazy="false" table="people">
+        <meta attribute="eclassName" inherit="false">People</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+        <property name="name" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="name"/>
+        </property>
+        <property name="email" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="email"/>
+        </property>
+        <bag name="revisionsCommitted" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+                <column name="committer_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="Revision"/>
+        </bag>
+        <bag name="revisionsAuthored" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+                <column name="author_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="Revision"/>
+        </bag>
+		<bag name="blames" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="author_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Blame"/>
+		</bag>
+        <many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="repository_id"/>
+        </many-to-one>
+    </class>
+    <class name="MG.impl.RevisionImpl" entity-name="Revision" abstract="false" lazy="false" table="scmlog">
+        <meta attribute="eclassName" inherit="false">Revision</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+        <property name="commit_id" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+            <column not-null="false" unique="false" name="commit_id"/>
+        </property>
+        <property name="rev" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="rev"/>
+        </property>
+        <property name="message" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="message"/>
+        </property>
+        <property name="author_date" lazy="false" insert="true" update="true" not-null="false" unique="false" type="timestamp">
+            <column not-null="false" unique="false" name="author_date"/>
+        </property>
+        <property name="commit_date" lazy="false" insert="true" update="true" not-null="false" unique="false" type="timestamp">
+            <column not-null="false" unique="false" name="commit_date"/>
+        </property>
+        <property name="composed_rev" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+            <column not-null="false" unique="false" name="composed_rev"/>
+        </property>
+        <property name="file_count" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+            <column not-null="false" unique="false" name="file_count"/>
+        </property>
+        <property name="is_bug_fix" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+            <column not-null="false" unique="false" name="is_bug_fix"/>
+        </property>
+        <many-to-one name="author" entity-name="People" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="author_id"/>
+        </many-to-one>
+        <many-to-one name="committer" entity-name="People" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="committer_id"/>
+        </many-to-one>
+        <bag name="actions" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+                <column name="commit_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="Action"/>
+        </bag>
+        <bag name="fileLinks" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+                <column name="commit_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="FileLink"/>
+        </bag>
+		<bag name="tags" lazy="true" inverse="true" table="tag_revisions">
+			<key update="true">
+				<column name="commit_id" unique="false"/>
+			</key>
+			<many-to-many entity-name="Tag" unique="false">
+				<column name="tag_id" not-null="true" unique="false"/>
+			</many-to-many>
+		</bag>
+		<bag name="patches" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="commit_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Patch"/>
+		</bag>
+		<bag name="patchLines" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="commit_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="PatchLines"/>
+		</bag>
+		<bag name="hunks" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="commit_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Hunk"/>
+		</bag>
+		<bag name="hunkBlames" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="bug_commit_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="HunkBlames"/>
+		</bag>
+		<bag name="content" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="commit_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Content"/>
+		</bag>
+		<bag name="blames" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="commit_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Blame"/>
+		</bag>
+        <many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="repository_id"/>
+        </many-to-one>
+    </class>
+    <class name="MG.impl.ActionImpl" entity-name="Action" abstract="false" lazy="false" table="actions">
+        <meta attribute="eclassName" inherit="false">Action</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+        <property name="type" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+            <column not-null="true" unique="false" name="type"/>
+        </property>
+        <property name="current_file_path" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="current_file_path"/>
+        </property>
+		<many-to-one name="file" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="file_id"/>
+		</many-to-one>
+        <many-to-one name="revision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="commit_id"/>
+        </many-to-one>
+        <many-to-one name="branch" entity-name="Branch" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="branch_id"/>
+        </many-to-one>
+        <many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="repository_id"/>
+        </many-to-one>
+		<one-to-one name="copy" entity-name="FileCopy" cascade="merge,persist,save-update,lock,refresh" lazy="false" property-ref="action"/>
+    </class>
+    <class name="MG.impl.BranchImpl" entity-name="Branch" abstract="false" lazy="false" table="branches">
+        <meta attribute="eclassName" inherit="false">Branch</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+        <property name="name" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="name"/>
+        </property>
+        <bag name="actions" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+                <column name="branch_id" unique="false"/>
+            </key>
+            <one-to-many entity-name="Action"/>
+        </bag>
+        <many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="repository_id"/>
+        </many-to-one>
+    </class>
+    <class name="MG.impl.FileImpl" entity-name="File" abstract="false" lazy="false" table="files">
+        <meta attribute="eclassName" inherit="false">File</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+        <property name="file_name" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="file_name"/>
+        </property>
+        <property name="file_type" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="file_type"/>
+        </property>
+		<many-to-one name="type" entity-name="FileType" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="type_id"/>
+		</many-to-one>
+		<bag name="actions" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="file_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Action"/>
+		</bag>
+		<bag name="childrenLinks" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+				<column name="parent_id" unique="false"/>
+            </key>
+			<one-to-many entity-name="FileLink"/>
+        </bag>
+		<bag name="parentLinks" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+				<column name="file_id" unique="false"/>
+            </key>
+			<one-to-many entity-name="FileLink"/>
+        </bag>
+		<bag name="copiesTo" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="to_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="FileCopy"/>
+		</bag>
+		<bag name="copiesFrom" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="from_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="FileCopy"/>
+		</bag>
+		<bag name="patches" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="file_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Patch"/>
+		</bag>
+		<bag name="patcheLines" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="file_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="PatchLines"/>
+		</bag>
+		<bag name="hunks" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="file_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Hunk"/>
+		</bag>
+		<bag name="content" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="file_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Content"/>
+		</bag>
+		<bag name="blames" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="file_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="Blame"/>
+		</bag>
+        <many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="repository_id"/>
+        </many-to-one>
+    </class>
+	<class name="MG.impl.FileCopyImpl" entity-name="FileCopy" abstract="false" lazy="false" table="file_copies">
+		<meta attribute="eclassName" inherit="false">FileCopy</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="new_file_name" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="new_file_name"/>
+		</property>
+		<many-to-one name="action" entity-name="Action" not-null="false" lazy="false" insert="true" update="true">
+		  <column not-null="false" unique="false" name="action_id"/>
+        </many-to-one>
+		<many-to-one name="toFile" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="to_id"/>
+		</many-to-one>
+		<many-to-one name="fromFile" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="from_id"/>
+		</many-to-one>
+		<many-to-one name="fromRevision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="from_commit_id"/>
+		</many-to-one>
+		<many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="repository_id"/>
+		</many-to-one>
+	</class>
+	<class name="MG.impl.FileLinkImpl" entity-name="FileLink" abstract="false" lazy="false" table="file_links">
+        <meta attribute="eclassName" inherit="false">FileLink</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="parent" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="parent_id"/>
+		</many-to-one>
+		<many-to-one name="child" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="file_id"/>
+		</many-to-one>
+        <many-to-one name="revision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+            <column not-null="false" unique="false" name="commit_id"/>
+        </many-to-one>
+		<many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="repository_id"/>
+		</many-to-one>
+    </class>
+	<class name="MG.impl.FileTypeImpl" entity-name="FileType" abstract="false" lazy="false" table="file_types">
+        <meta attribute="eclassName" inherit="false">FileType</meta>
+        <meta attribute="epackage" inherit="false">MG</meta>
+        <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+            <meta attribute="syntheticId" inherit="false">true</meta>
+            <generator class="native"/>
+        </id>
+        <property name="type" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+            <column not-null="false" unique="false" name="type"/>
+        </property>
+		<bag name="files" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+            <key update="true">
+				<column name="type_id" unique="false"/>
+            </key>
+			<one-to-many entity-name="File"/>
+        </bag>
+		<many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="repository_id"/>
+		</many-to-one>
+	</class>
+	<class name="MG.impl.TagImpl" entity-name="Tag" abstract="false" lazy="false" table="tags">
+		<meta attribute="eclassName" inherit="false">Tag</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="name" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="name"/>
+		</property>
+		<bag name="revision" lazy="true" table="tag_revisions">
+			<key update="true">
+				<column name="tag_id" unique="false"/>
+			</key>
+			<many-to-many entity-name="Revision" unique="false">
+				<column name="commit_id" not-null="true" unique="false"/>
+			</many-to-many>
+		</bag>
+		<many-to-one name="repository" entity-name="Model" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="repository_id"/>
+		</many-to-one>
+	</class>
+	<class name="MG.impl.PatchImpl" entity-name="Patch" abstract="false" lazy="false" table="patches">
+		<meta attribute="eclassName" inherit="false">Patch</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="patch" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="patch"/>
+		</property>
+		<many-to-one name="file" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="file_id"/>
+		</many-to-one>
+		<many-to-one name="revision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="commit_id"/>
+		</many-to-one>
+	</class>
+	<class name="MG.impl.PatchLinesImpl" entity-name="PatchLines" abstract="false" lazy="false" table="patch_lines">
+		<meta attribute="eclassName" inherit="false">PatchLines</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="added" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="added"/>
+		</property>
+		<property name="removed" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="removed"/>
+		</property>
+		<many-to-one name="file" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="file_id"/>
+		</many-to-one>
+		<many-to-one name="revision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="commit_id"/>
+		</many-to-one>
+	</class>
+	<class name="MG.impl.HunkImpl" entity-name="Hunk" abstract="false" lazy="false" table="hunks">
+		<meta attribute="eclassName" inherit="false">Hunk</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="bug_introducing" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="bug_introducing"/>
+		</property>
+		<property name="new_end_line" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="new_end_line"/>
+		</property>
+		<property name="new_start_line" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="new_start_line"/>
+		</property>
+		<property name="old_end_line" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="old_end_line"/>
+		</property>
+		<property name="old_start_line" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="old_start_line"/>
+		</property>
+		<many-to-one name="file" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="file_id"/>
+		</many-to-one>
+		<many-to-one name="revision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="commit_id"/>
+		</many-to-one>
+		<bag name="hunkBlame" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="hunk_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="HunkBlames"/>
+		</bag>
+
+	</class>
+	<class name="MG.impl.HunkBlamesImpl" entity-name="HunkBlames" abstract="false" lazy="false" table="hunk_blames">
+		<meta attribute="eclassName" inherit="false">HunkBlames</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<many-to-one name="hunk" entity-name="Hunk" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="hunk_id"/>
+		</many-to-one>
+		<many-to-one name="lastRevision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="bug_commit_id"/>
+		</many-to-one>
+	</class>
+	<class name="MG.impl.ContentImpl" entity-name="Content" abstract="false" lazy="false" table="content">
+		<meta attribute="eclassName" inherit="false">Content</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="loc" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="loc"/>
+		</property>
+		<property name="size" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="size"/>
+		</property>
+		<many-to-one name="file" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="file_id"/>
+		</many-to-one>
+		<many-to-one name="revision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="commit_id"/>
+		</many-to-one>
+	</class>
+	<class name="MG.impl.BlameImpl" entity-name="Blame" abstract="false" lazy="false" table="blame">
+		<meta attribute="eclassName" inherit="false">Blame</meta>
+		<meta attribute="epackage" inherit="false">MG</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="lineCount" lazy="false" insert="true" update="true" not-null="false" unique="false" type="int">
+			<column not-null="false" unique="false" name="n_lines"/>
+		</property>
+		<many-to-one name="file" entity-name="File" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="file_id"/>
+		</many-to-one>
+		<many-to-one name="author" entity-name="People" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="author_id"/>
+		</many-to-one>
+		<many-to-one name="revision" entity-name="Revision" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="commit_id"/>
+		</many-to-one>
+	</class>
+</hibernate-mapping>
