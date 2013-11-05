@@ -55,9 +55,15 @@ public class App {
 //			famixTool.process(workspace, commitId);
 //		}
 		
+		workspace = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/fmx/3";
+		FAMIXResourceTool famixTool = new FAMIXResourceTool();
+		famixTool.process(workspace, 3);
+		
+		
 //		workspace = "/home/philip-iii/TEMP/fmx/dag";
 //		DAGResourceTool dagTool = new DAGResourceTool();
 //		dagTool.process(workspace);
+		System.exit(0);
 
 		workspace = "/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input";
 		dbName = "bz_x";
@@ -66,7 +72,6 @@ public class App {
 		bzTool.process(workspace,dbName);
 		
 		
-		System.exit(0);
 		
 		workspace = "/home/philip-iii/TEMP/fmx";
 //		workspace = "/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input";
