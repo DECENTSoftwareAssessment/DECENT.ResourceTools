@@ -68,7 +68,7 @@ public class BZResourceTool extends ResourceTool {
 		//*************** Initialize Teneo Hibernate DataStore *************************************
 		HbDataStore hbds = (HbDataStore) HbHelper.INSTANCE.createRegisterDataStore(dbName);
 		//Set Database properties
-		Properties props = initializeDataStoreProperties(dbServer, dbName, dbUser, dbPass);
+		Properties props = initializeDataStoreProperties(getDbServer(), dbName, getDbUser(), getDbPass());
 
 		HbHelper.INSTANCE.getDataStore(dbName).getDataStoreProperties();
 		
