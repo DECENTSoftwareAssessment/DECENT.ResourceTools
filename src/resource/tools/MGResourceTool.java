@@ -49,12 +49,13 @@ public class MGResourceTool extends ResourceTool {
 		mappingFilePath = "/mg.hbm.xml"; //relative to mapping which should be in the class path
 //		mappingFilePath = "/mg-core.hbm.xml"; //core
 		mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
+		//TODO: provide also no patches mapping
 		
 //		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 		initializeDB(dbName);
-
-		saveReferenceMappings(HbHelper.INSTANCE.getDataStore(dbName), mappingRefFilePath);
-
+		if (!new File("mapping"+mappingFilePath).exists()) {
+			saveReferenceMappings(HbHelper.INSTANCE.getDataStore(dbName), "mapping/ref"+mappingFilePath);
+		}
 //	    storeResourceInDB(fromXMI.getContents(),dbName);
 	    Resource fromDB = loadResourceFromDB(dbName);
 		storeResourceContents(fromDB.getContents(), outputPathFromDB, extension);
@@ -70,12 +71,16 @@ public class MGResourceTool extends ResourceTool {
 		//*************** Initialize Teneo Hibernate DataStore *************************************
 		HbDataStore hbds = (HbDataStore) HbHelper.INSTANCE.createRegisterDataStore(dbName);
 		//Set Database properties
-		Properties props = initializeDataStoreProperties(dbServer, dbName, dbUser, dbPass);
+		Properties props = initializeDataStoreProperties(getDbServer(), dbName, getDbUser(), getDbPass());
 
 		HbHelper.INSTANCE.getDataStore(dbName).getDataStoreProperties();
 		
-		//TODO: figure out selective mapping
-		props.setProperty(PersistenceOptions.MAPPING_FILE_PATH, mappingFilePath);
+		if (new File("mapping"+mappingFilePath).exists()) {
+			props.setProperty(PersistenceOptions.MAPPING_FILE_PATH, mappingFilePath);
+		} else {
+			System.out.println("Mapping file does not exist, a new one will be created...");
+		}
+			
 
 //		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
 		hbds.setDataStoreProperties(props);
@@ -109,7 +114,12 @@ public class MGResourceTool extends ResourceTool {
 	private void firstRunSetup(HbDataStore hbds) {
 		hbds.getHbContext();
 		Session session = hbds.getSessionFactory().openSession();
-
+		//check if there is anything in the db and skip the rest if it is not the case as it is not applicable
+		Query checkDBExistsQuery = session.createQuery("FROM File");
+		if (checkDBExistsQuery.list().size() == 0){
+			session.close();
+			return;
+		}
 		//check if first run (whether the dummy top-level file has been created) and do some tune up
 		Query checkQuery = session.createQuery("FROM File WHERE id = '-1'");
 		if (checkQuery.list().size() == 0){
