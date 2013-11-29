@@ -46,12 +46,13 @@ public class BZResourceTool extends ResourceTool {
 		String extension = "bz";
 		
 		String mappingRefFilePath = "/home/philip-iii/Dev/workspaces/emf/DECENT.ResourceTools/mapping/bz-ref.hbm.xml";
-		mappingFilePath = "/bz.hbm.xml"; //relative to mapping which should be in the class path
+		mappingFilePath = "/bz.hbm-advanced.xml"; //relative to mapping which should be in the class path
 		
 //		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 		initializeDB(dbName);
-
-		saveReferenceMappings(HbHelper.INSTANCE.getDataStore(dbName), mappingRefFilePath);
+		if (!new File("mapping"+mappingFilePath).exists()) {
+			saveReferenceMappings(HbHelper.INSTANCE.getDataStore(dbName), "mapping/ref"+mappingFilePath);
+		}
 
 //	    storeResourceInDB(fromXMI.getContents(),dbName);
 	    Resource fromDB = loadResourceFromDB(dbName);
@@ -73,8 +74,11 @@ public class BZResourceTool extends ResourceTool {
 		HbHelper.INSTANCE.getDataStore(dbName).getDataStoreProperties();
 		
 		//TODO: figure out selective mapping
-		//TODO: parameterize - if skipped reference is generated
-		//props.setProperty(PersistenceOptions.MAPPING_FILE_PATH, mappingFilePath);
+		if (new File("mapping"+mappingFilePath).exists()) {
+			props.setProperty(PersistenceOptions.MAPPING_FILE_PATH, mappingFilePath);
+		} else {
+			System.out.println("Mapping file does not exist, a new one will be created...");
+		}
 
 //		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
 		hbds.setDataStoreProperties(props);
@@ -109,46 +113,57 @@ public class BZResourceTool extends ResourceTool {
 		hbds.getHbContext();
 		Session session = hbds.getSessionFactory().openSession();
 
+		//check if there is anything in the db and skip the rest if it is not the case as it is not applicable
+		Query checkDBExistsQuery = session.createQuery("FROM BZIssue");
+		if (checkDBExistsQuery.list().size() == 0){
+			session.close();
+			return;
+		}
+
+		int repoId = 1;
+		
 		//check if first run (whether the dummy top-level file has been created) and do some tune up
-		Query checkQuery = session.createQuery("FROM BZRepo WHERE id = '-1'");
-		if (false && checkQuery.list().size() == 0){
+		Query checkQuery = session.createQuery("FROM BZIssue WHERE repoId = "+repoId+"");
+		if (checkQuery.list().size() == 0){
 			logInfo("First run! Adjusting database...");
-			int repository_id = 1;
-			String directoryFileType = "directory";
-
-			//insert a dummy top-level file
-			Query insertQuery = session.createSQLQuery("INSERT INTO files (id, file_name, repository_id) VALUES('-1', 'ROOT', '"+repository_id +"')");
-			insertQuery.executeUpdate();
 			
-			//add file type field values 
-			Query fileTypeUpdateQuery = session.createSQLQuery("UPDATE files f SET file_type = IFNULL((SELECT type FROM file_types t WHERE t.file_id = f.id),'"+directoryFileType +"')");
-			fileTypeUpdateQuery.executeUpdate();
-			
-			//TODO: some storage engine fixes since InnoDB and MyISAM don't seem to work together well
-			//ideally will be done by MininGit directly
-			//needs to be done before the initialization
-			String[] tables = new String[]{"actions","blame","branches","file_copies","file_links","file_types","files","scmlog","people","tags","hunk_blames","line_blames","patch_lines","repositories","tag_revisions"};
-			for (String c : tables) {
-				Query alterQuery = session.createSQLQuery("ALTER TABLE "+c+" ENGINE = InnoDB");
-				alterQuery.executeUpdate();
-			}
-
 			//fix missing repository links, 
 			//TODO: need to check the proper repo id
-			//TODO: need to extend with other classes too
-			String[] classes = new String[]{"Action","Branch","FileCopy","FileLink","People","Tag"};
+			//TODO: figure out why BZComponent has wrong repoId
+			String[] classes = new String[]{"BZIssue", "BZComponent"};
 			for (String c : classes) {
-				Query updateQuery = session.createQuery("UPDATE "+c+" SET repository = "+repository_id+"");
+				Query updateQuery = session.createQuery("UPDATE "+c+" SET repoId = "+repoId+"");
 				updateQuery.executeUpdate();
 			}
+
+			logInfo("  Updating product IDs...");
+			Query updateProductIdQuery = session.createSQLQuery("UPDATE BZProduct p, BZIssue i SET i.productId = p.id WHERE i.product = p.productId");
+			updateProductIdQuery.executeUpdate();
 			
-			//add a commit_id column to store a copy of scmlog.id
-//			Query alterQuery = session.createSQLQuery("ALTER TABLE scmlog ADD COLUMN commit_id INTEGER NOT NULL;");
-//			alterQuery.executeUpdate();
+			logInfo("  Updating component IDs...");
+			Query updateComponentIdQuery = session.createSQLQuery("UPDATE BZComponent c, BZIssue i SET i.componentId = c.id WHERE i.component = c.componentId");
+			updateComponentIdQuery.executeUpdate();
+
+			logInfo("  Updating comments...");
+			Query updateCommentsQuery = session.createSQLQuery("UPDATE BZComment c, BZIssue i SET c.issue = i.id WHERE c.issueId = i.issueId");
+			updateCommentsQuery.executeUpdate();
 			
-			//set commit_id = id
-			Query updateQuery = session.createSQLQuery("UPDATE scmlog s SET s.commit_id = s.id");
-			updateQuery.executeUpdate();
+			logInfo("  Updating events...");
+			Query updateEventsQuery = session.createSQLQuery("UPDATE BZEvent e, BZIssue i SET e.issue = i.id WHERE e.issueId = i.issueId");
+			updateEventsQuery.executeUpdate();
+
+			//TODO: this should probably be included in MG as well
+			logInfo("  Cleaning comments...");
+			
+			String[] characters = new String[]{"0x1a", "0x1b", "0x1f", "0x8"};
+			for (String c : characters) {
+				Query cleanCommentsQuery = session.createSQLQuery(
+						"UPDATE BZComment B " + 
+								"SET commentText = REPLACE (commentText, CHAR("+c+" using utf8), '') " +
+								"  , commentHTML = REPLACE (commentHTML, CHAR("+c+" using utf8), '') " );
+				cleanCommentsQuery.executeUpdate();
+			}
+			
 			
 			logInfo("  ...done");
 			
@@ -178,7 +193,7 @@ public class BZResourceTool extends ResourceTool {
 		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "JOINED");
 		props.setProperty(PersistenceOptions.SET_FOREIGN_KEY_NAME, "false");
 		props.setProperty(PersistenceOptions.JOIN_TABLE_FOR_NON_CONTAINED_ASSOCIATIONS, "false");
-		props.setProperty("teneo.naming.strategy", "lowercase");
+		props.setProperty("teneo.naming.strategy", "none");
 		props.setProperty("teneo.mapping.sql_name_escape_character", "");
 		props.setProperty("teneo.mapping.cascade_policy_on_containment", "REMOVE, REFRESH, PERSIST, MERGE, CASCADE");
 		//props.setProperty(PersistenceOptions.MAP_ALL_LISTS_AS_IDBAG, "true");
