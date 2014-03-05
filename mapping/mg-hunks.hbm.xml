@@ -4,7 +4,7 @@
 <hibernate-mapping auto-import="false">
 	<class name="MG.impl.HunkImpl" entity-name="Hunk" abstract="false" lazy="false" table="hunks">
 		<meta attribute="eclassName" inherit="false">Hunk</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>

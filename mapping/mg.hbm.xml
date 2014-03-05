@@ -4,7 +4,7 @@
 <hibernate-mapping auto-import="false">
     <class name="MG.impl.ModelImpl" entity-name="Model" abstract="false" lazy="false" table="repositories">
         <meta attribute="eclassName" inherit="false">Model</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -75,7 +75,7 @@
     </class>
     <class name="MG.impl.PeopleImpl" entity-name="People" abstract="false" lazy="false" table="people">
         <meta attribute="eclassName" inherit="false">People</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -110,7 +110,7 @@
     </class>
     <class name="MG.impl.RevisionImpl" entity-name="Revision" abstract="false" lazy="false" table="scmlog">
         <meta attribute="eclassName" inherit="false">Revision</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -219,7 +219,7 @@
     </class>
     <class name="MG.impl.ActionImpl" entity-name="Action" abstract="false" lazy="false" table="actions">
         <meta attribute="eclassName" inherit="false">Action</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -246,7 +246,7 @@
     </class>
     <class name="MG.impl.BranchImpl" entity-name="Branch" abstract="false" lazy="false" table="branches">
         <meta attribute="eclassName" inherit="false">Branch</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -266,7 +266,7 @@
     </class>
     <class name="MG.impl.FileImpl" entity-name="File" abstract="false" lazy="false" table="files">
         <meta attribute="eclassName" inherit="false">File</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -352,7 +352,7 @@
     </class>
 	<class name="MG.impl.FileCopyImpl" entity-name="FileCopy" abstract="false" lazy="false" table="file_copies">
 		<meta attribute="eclassName" inherit="false">FileCopy</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -378,7 +378,7 @@
 	</class>
 	<class name="MG.impl.FileLinkImpl" entity-name="FileLink" abstract="false" lazy="false" table="file_links">
         <meta attribute="eclassName" inherit="false">FileLink</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -398,7 +398,7 @@
     </class>
 	<class name="MG.impl.FileTypeImpl" entity-name="FileType" abstract="false" lazy="false" table="file_types">
         <meta attribute="eclassName" inherit="false">FileType</meta>
-        <meta attribute="epackage" inherit="false">MG</meta>
+        <meta attribute="epackage" inherit="false">http://MG/1.0</meta>
         <id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
             <meta attribute="syntheticId" inherit="false">true</meta>
             <generator class="native"/>
@@ -418,7 +418,7 @@
 	</class>
 	<class name="MG.impl.TagImpl" entity-name="Tag" abstract="false" lazy="false" table="tags">
 		<meta attribute="eclassName" inherit="false">Tag</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -440,7 +440,7 @@
 	</class>
 	<class name="MG.impl.PatchImpl" entity-name="Patch" abstract="false" lazy="false" table="patches">
 		<meta attribute="eclassName" inherit="false">Patch</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -457,7 +457,7 @@
 	</class>
 	<class name="MG.impl.PatchLinesImpl" entity-name="PatchLines" abstract="false" lazy="false" table="patch_lines">
 		<meta attribute="eclassName" inherit="false">PatchLines</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -477,7 +477,7 @@
 	</class>
 	<class name="MG.impl.LineBlamesImpl" entity-name="LineBlames" abstract="false" lazy="false" table="line_blames">
 		<meta attribute="eclassName" inherit="false">LineBlames</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -500,7 +500,7 @@
     </class>
 	<class name="MG.impl.HunkImpl" entity-name="Hunk" abstract="false" lazy="false" table="hunks">
 		<meta attribute="eclassName" inherit="false">Hunk</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -536,7 +536,7 @@
 	</class>
 	<class name="MG.impl.HunkBlamesImpl" entity-name="HunkBlames" abstract="false" lazy="false" table="hunk_blames">
 		<meta attribute="eclassName" inherit="false">HunkBlames</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -550,7 +550,7 @@
 	</class>
 	<class name="MG.impl.ContentImpl" entity-name="Content" abstract="false" lazy="false" table="content">
 		<meta attribute="eclassName" inherit="false">Content</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
@@ -573,7 +573,7 @@
 	</class>
 	<class name="MG.impl.BlameImpl" entity-name="Blame" abstract="false" lazy="false" table="blame">
 		<meta attribute="eclassName" inherit="false">Blame</meta>
-		<meta attribute="epackage" inherit="false">MG</meta>
+		<meta attribute="epackage" inherit="false">http://MG/1.0</meta>
 		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
 			<meta attribute="syntheticId" inherit="false">true</meta>
 			<generator class="native"/>
