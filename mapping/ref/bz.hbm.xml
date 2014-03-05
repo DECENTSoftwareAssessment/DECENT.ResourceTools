@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false">
+	<class name="BZ.impl.BZRepoImpl" entity-name="BZRepo" abstract="false" lazy="false" table="BZRepo">
+		<meta attribute="eclassName" inherit="false">BZRepo</meta>
+		<meta attribute="epackage" inherit="false">http://BZ/1.0</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="repoURL" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="repoURL"/>
+		</property>
+		<bag name="products" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="BZProduct_repo_e_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="BZProduct"/>
+		</bag>
+		<bag name="components" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="BZComponent_repo_e_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="BZComponent"/>
+		</bag>
+		<bag name="issues" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="BZIssue_repo_e_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="BZIssue"/>
+		</bag>
+	</class>
+	<class name="BZ.impl.BZProductImpl" entity-name="BZProduct" abstract="false" lazy="false" table="BZProduct">
+		<meta attribute="eclassName" inherit="false">BZProduct</meta>
+		<meta attribute="epackage" inherit="false">http://BZ/1.0</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="productId" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="productId"/>
+		</property>
+		<property name="productDescription" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="productDescription"/>
+		</property>
+		<property name="productURL" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="productURL"/>
+		</property>
+		<many-to-one name="repo" entity-name="BZRepo" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="BZProduct_repo_e_id"/>
+		</many-to-one>
+		<bag name="components" lazy="true" cascade="persist,merge,refresh,save-update,lock">
+			<key update="true">
+				<column name="BZComponent_product_e_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="BZComponent"/>
+		</bag>
+	</class>
+	<class name="BZ.impl.BZComponentImpl" entity-name="BZComponent" abstract="false" lazy="false" table="BZComponent">
+		<meta attribute="eclassName" inherit="false">BZComponent</meta>
+		<meta attribute="epackage" inherit="false">http://BZ/1.0</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="componentId" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="componentId"/>
+		</property>
+		<property name="componentURL" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="componentURL"/>
+		</property>
+		<property name="componentDescription" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="componentDescription"/>
+		</property>
+		<property name="defaultAssignee" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="defaultAssignee"/>
+		</property>
+		<many-to-one name="product" entity-name="BZProduct" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="BZComponent_product_e_id"/>
+		</many-to-one>
+		<many-to-one name="repo" entity-name="BZRepo" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="BZComponent_repo_e_id"/>
+		</many-to-one>
+	</class>
+	<class name="BZ.impl.BZIssueImpl" entity-name="BZIssue" abstract="false" lazy="false" table="BZIssue">
+		<meta attribute="eclassName" inherit="false">BZIssue</meta>
+		<meta attribute="epackage" inherit="false">http://BZ/1.0</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="issueId" lazy="false" insert="true" update="true" not-null="true" unique="false" type="int">
+			<column not-null="true" unique="false" name="issueId"/>
+		</property>
+		<property name="issueTitle" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="issueTitle"/>
+		</property>
+		<property name="issueURL" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="issueURL"/>
+		</property>
+		<property name="status" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="status"/>
+		</property>
+		<property name="product" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="product"/>
+		</property>
+		<property name="component" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="component"/>
+		</property>
+		<property name="classification" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="classification"/>
+		</property>
+		<property name="version" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="version"/>
+		</property>
+		<property name="platform" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="platform"/>
+		</property>
+		<property name="importance" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="importance"/>
+		</property>
+		<property name="milestone" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="milestone"/>
+		</property>
+		<property name="assignedTo" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="assignedTo"/>
+		</property>
+		<property name="keywords" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="keywords"/>
+		</property>
+		<property name="referenceURL" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="referenceURL"/>
+		</property>
+		<property name="dependsOn" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="dependsOn"/>
+		</property>
+		<property name="blocks" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="blocks"/>
+		</property>
+		<property name="reportedBy" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="reportedBy"/>
+		</property>
+		<property name="reportedByUsername" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="reportedByUsername"/>
+		</property>
+		<property name="reportedOn" lazy="false" insert="true" update="true" not-null="true" unique="false" type="timestamp">
+			<column not-null="true" unique="false" name="reportedOn"/>
+		</property>
+		<property name="lastModifiedOn" lazy="false" insert="true" update="true" not-null="true" unique="false" type="timestamp">
+			<column not-null="true" unique="false" name="lastModifiedOn"/>
+		</property>
+		<property name="ccList" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="ccList"/>
+		</property>
+		<property name="seeAlso" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="seeAlso"/>
+		</property>
+		<property name="latestCommit" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="latestCommit"/>
+		</property>
+		<property name="versionFixedIn" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="versionFixedIn"/>
+		</property>
+		<many-to-one name="repo" entity-name="BZRepo" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="BZIssue_repo_e_id"/>
+		</many-to-one>
+		<bag name="comments" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="BZComment_issue_e_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="BZComment"/>
+		</bag>
+		<bag name="events" lazy="true" cascade="persist,merge,delete,refresh,save-update,lock">
+			<key update="true">
+				<column name="BZEvent_issue_e_id" unique="false"/>
+			</key>
+			<one-to-many entity-name="BZEvent"/>
+		</bag>
+	</class>
+	<class name="BZ.impl.BZCommentImpl" entity-name="BZComment" abstract="false" lazy="false" table="BZComment">
+		<meta attribute="eclassName" inherit="false">BZComment</meta>
+		<meta attribute="epackage" inherit="false">http://BZ/1.0</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<many-to-one name="issue" entity-name="BZIssue" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="BZComment_issue_e_id"/>
+		</many-to-one>
+		<property name="commentId" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="commentId"/>
+		</property>
+		<property name="commentAuthor" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="commentAuthor"/>
+		</property>
+		<property name="commentTime" lazy="false" insert="true" update="true" not-null="false" unique="false" type="timestamp">
+			<column not-null="false" unique="false" name="commentTime"/>
+		</property>
+		<property name="commentHTML" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="commentHTML"/>
+		</property>
+		<property name="commentText" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="commentText"/>
+		</property>
+	</class>
+	<class name="BZ.impl.BZEventImpl" entity-name="BZEvent" abstract="false" lazy="false" table="BZEvent">
+		<meta attribute="eclassName" inherit="false">BZEvent</meta>
+		<meta attribute="epackage" inherit="false">http://BZ/1.0</meta>
+		<id type="long" name="id" column="id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId" inherit="false">true</meta>
+			<generator class="native"/>
+		</id>
+		<property name="author" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="author"/>
+		</property>
+		<property name="date" lazy="false" insert="true" update="true" not-null="false" unique="false" type="timestamp">
+			<column not-null="false" unique="false" name="date"/>
+		</property>
+		<property name="field" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="field"/>
+		</property>
+		<property name="oldValue" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="oldValue"/>
+		</property>
+		<property name="newValue" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="newValue"/>
+		</property>
+		<many-to-one name="issue" entity-name="BZIssue" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="BZEvent_issue_e_id"/>
+		</many-to-one>
+	</class>
+</hibernate-mapping>
