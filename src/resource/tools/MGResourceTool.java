@@ -24,7 +24,7 @@ public class MGResourceTool extends ResourceTool {
 
 	//TODO: find a more appropriate way to handle mapping files
 	private String mappingFilePath;
-	public enum MODE {COMPLETE, CORE, NO_LINEBLAME_CONTENT};
+	public enum MODE {COMPLETE, CORE, NO_LINEBLAME_CONTENT, NO_LINEBLAME_CONTENT_PATCH};
 	
 	public MGResourceTool() {
 		super(MGResourceTool.class.getName());
@@ -57,6 +57,9 @@ public class MGResourceTool extends ResourceTool {
 			break;
 		case NO_LINEBLAME_CONTENT:
 			mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
+			break;
+		case NO_LINEBLAME_CONTENT_PATCH:
+			mappingFilePath = "/mg-no-content-lineblame-patch.hbm.xml"; //no content and line blames
 			break;
 		default:
 			//TODO: provide also no patches mapping
