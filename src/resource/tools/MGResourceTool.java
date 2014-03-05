@@ -24,6 +24,7 @@ public class MGResourceTool extends ResourceTool {
 
 	//TODO: find a more appropriate way to handle mapping files
 	private String mappingFilePath;
+	public enum MODE {COMPLETE, CORE, NO_LINEBLAME_CONTENT};
 	
 	public MGResourceTool() {
 		super(MGResourceTool.class.getName());
@@ -39,23 +40,35 @@ public class MGResourceTool extends ResourceTool {
 	    EValidator.Registry.INSTANCE.put(MGPackage.eINSTANCE, validator);
 	}
 
-	public void process(String workspace, String dbName){
+	public void process(String workspace, String dbName, MODE mode){
 		new File(workspace).mkdirs();
 		//TODO: parameterize
 		String outputPath = workspace+"/model-source.mg";
 		String outputPathFromDB = workspace+"/model.mg";
 		String extension = "mg";
 		
-		mappingFilePath = "/mg.hbm.xml"; //relative to mapping which should be in the class path
-//		mappingFilePath = "/mg-core.hbm.xml"; //core
-		//mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
-		//TODO: provide also no patches mapping
+		//mappingFilePath is relative to mapping which should be in the class path
+		switch (mode) {
+		case COMPLETE:
+			mappingFilePath = "/mg.hbm.xml"; 
+			break;
+		case CORE:
+			mappingFilePath = "/mg-core.hbm.xml";
+			break;
+		case NO_LINEBLAME_CONTENT:
+			mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
+			break;
+		default:
+			//TODO: provide also no patches mapping
+			break;
+		}
 		
-//		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 		initializeDB(dbName);
 		if (!new File("mapping"+mappingFilePath).exists()) {
 			saveReferenceMappings(HbHelper.INSTANCE.getDataStore(dbName), "mapping/ref"+mappingFilePath);
 		}
+
+//		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 //	    storeResourceInDB(fromXMI.getContents(),dbName);
 	    Resource fromDB = loadResourceFromDB(dbName);
 		storeResourceContents(fromDB.getContents(), outputPathFromDB, extension);

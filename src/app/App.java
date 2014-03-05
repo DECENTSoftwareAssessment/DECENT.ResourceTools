@@ -13,6 +13,7 @@ import resource.tools.BZResourceTool;
 import resource.tools.DAGResourceTool;
 import resource.tools.FAMIXResourceTool;
 import resource.tools.MGResourceTool;
+import resource.tools.MGResourceTool.MODE;
 import app.MSETool.SPLIT_MODE;
 
 public class App {
@@ -20,6 +21,11 @@ public class App {
 	public static void main(String[] args) {
 		String workspace = "";
 
+		translateMG("localhost","7320","mg_k3b","/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/k3b", MODE.NO_LINEBLAME_CONTENT);
+
+		System.exit(0);
+
+		
 		String gitPath = "/Users/philip-iii/Dev/workspaces/emf/DECENT.ResourceTools/.git";
 		
 		gitPath = "/home/msr/Dev/Resources/git/copies/.git";
@@ -27,7 +33,7 @@ public class App {
 		generateDAG(workspace, gitPath);
 		translateDAG(workspace);
 
-		//translateMG("172.16.179.143","3306","mg_copies","/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/mg/copies");
+		//translateMG("172.16.179.143","3306","mg_copies","/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/copies", MODE.NO_LINEBLAME_CONTENT);
 
 		System.exit(0);
 		
@@ -163,11 +169,11 @@ public class App {
 		bzTool.process(workspace,database);
 	}
 
-	private static void translateMG(String server, String port, String database, String workspace) {
+	private static void translateMG(String server, String port, String database, String workspace, MODE mode) {
 		MGResourceTool mgTool = new MGResourceTool();
 		mgTool.setDbServer(server);
 		mgTool.setDbPort(port);
-		mgTool.process(workspace,database);
+		mgTool.process(workspace,database,mode);
 	}
 
 	private static void translateSplitMSE(String workspace, int size) {
