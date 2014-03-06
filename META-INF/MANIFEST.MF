@@ -26,5 +26,6 @@ Require-Bundle: org.eclipse.emf.common,
  DAG,
  dag.m1x,
  famix.m3x,
- BZ
+ BZ,
+ Configuration
 Export-Package: resource.tools
