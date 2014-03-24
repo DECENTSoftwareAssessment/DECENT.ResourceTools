@@ -7,21 +7,35 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.EcoreUtil2;
+
 import resource.tools.BZResourceTool;
+import resource.tools.ConfigurationResourceTool;
 import resource.tools.DAGResourceTool;
 import resource.tools.FAMIXResourceTool;
 import resource.tools.MGResourceTool;
 import resource.tools.MGResourceTool.MODE;
+import Configuration.Setting;
 import app.MSETool.SPLIT_MODE;
 
 public class App {
 
+	
 	public static void main(String[] args) {
 		String workspace = "";
-
-		translateMG("localhost","7320","mg_k3b","/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/k3b", MODE.NO_LINEBLAME_CONTENT);
+		String ws = "/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/";
+		ws = "./";
+		
+		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
+		configurationTool.process(ws,args[0]);
+		HashMap<String, String> settings = configurationTool.getSettings();
+		translateMG(settings,ws,MODE.NO_LINEBLAME_CONTENT_PATCH);
 
 		System.exit(0);
 
@@ -169,11 +183,13 @@ public class App {
 		bzTool.process(workspace,database);
 	}
 
-	private static void translateMG(String server, String port, String database, String workspace, MODE mode) {
+	private static void translateMG(HashMap<String,String> settings, String workspace, MODE mode) {
 		MGResourceTool mgTool = new MGResourceTool();
-		mgTool.setDbServer(server);
-		mgTool.setDbPort(port);
-		mgTool.process(workspace,database,mode);
+		mgTool.setDbUser(settings.get("dbUser"));
+		mgTool.setDbPass(settings.get("dbPass"));
+		mgTool.setDbServer(settings.get("dbServer"));
+		mgTool.setDbPort(settings.get("dbPort"));
+		mgTool.process(workspace,settings.get("dbName"),mode);
 	}
 
 	private static void translateSplitMSE(String workspace, int size) {
