@@ -30,12 +30,13 @@ public class App {
 	public static void main(String[] args) {
 		String workspace = "";
 		String ws = "/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/";
-		ws = "./";
+		//ws = "./";
 		
 		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
 		configurationTool.process(ws,args[0]);
 		HashMap<String, String> settings = configurationTool.getSettings();
-		translateMG(settings,ws,MODE.NO_LINEBLAME_CONTENT_PATCH);
+		translateBZ(settings,"/home/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
+		//translateMG(settings,ws,MODE.NO_LINEBLAME_CONTENT_PATCH);
 
 		System.exit(0);
 
@@ -64,7 +65,7 @@ public class App {
 		
 		translateDAG("/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/dag");
 
-		translateBZ("localhost","3306","bz_x","/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/bz/");
+		//translateBZ("localhost","3306","bz_x","/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/bz/");
 		
 		
 		workspace = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/output";
@@ -176,11 +177,13 @@ public class App {
 
 	} 
 	
-	private static void translateBZ(String server, String port, String database, String workspace) {
+	private static void translateBZ(HashMap<String,String> settings, String workspace) {
 		BZResourceTool bzTool = new BZResourceTool();
-		bzTool.setDbServer(server);
-		bzTool.setDbPort(port);		
-		bzTool.process(workspace,database);
+		bzTool.setDbUser(settings.get("dbUser"));
+		bzTool.setDbPass(settings.get("dbPass"));
+		bzTool.setDbServer(settings.get("dbServer"));
+		bzTool.setDbPort(settings.get("dbPort"));
+		bzTool.process(workspace,settings.get("BZdbName"));
 	}
 
 	private static void translateMG(HashMap<String,String> settings, String workspace, MODE mode) {
