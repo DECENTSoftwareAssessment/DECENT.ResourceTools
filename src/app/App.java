@@ -29,13 +29,16 @@ public class App {
 	
 	public static void main(String[] args) {
 		String workspace = "";
-		String ws = "/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/";
+		String ws = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/";
 		//ws = "./";
+		
+		translateFAMIXcomplete(args[0], true);
+		System.exit(0);
 		
 		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
 		configurationTool.process(ws,args[0]);
 		HashMap<String, String> settings = configurationTool.getSettings();
-		translateBZ(settings,"/home/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
+		translateBZ(settings,"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
 		//translateMG(settings,ws,MODE.NO_LINEBLAME_CONTENT_PATCH);
 
 		System.exit(0);
@@ -58,7 +61,7 @@ public class App {
 
 		translateSplitMSE(workspace, size);
 				
-		filterMSE(workspace);
+		filterMSE(workspace, "filtered");
 
 		//TODO: figure out cross-file linking as at the moment this results in  a ton of junk!
 		translateFAMIX("/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/fmx/mahr-sample-o/filtered/");
@@ -72,11 +75,11 @@ public class App {
 //		DECENTResourceTool decentTool = new DECENTResourceTool();
 //		decentTool.process(workspace);
 		
-		translateFAMIXcomplete(args[0]);
+		translateFAMIXcomplete(args[0], true);
 		
 	}
 
-	private static void translateFAMIXcomplete(String workspace) {
+	private static void translateFAMIXcomplete(String workspace, boolean filter) {
 		File ws = new File(workspace);
 		String[] commits = ws.list();
 		Arrays.sort(commits, new Comparator<String>() {
@@ -96,8 +99,14 @@ public class App {
 		for (String c : commits) {
 //			if (c.equals("3")) {
 //				System.out.println("Processing: "+c);
+				String suffix = "";
+				if (filter) {
+					suffix = "filtered";
+					filterMSE(workspace+c, suffix);
+					suffix = "/"+suffix;
+				}
 				FAMIXResourceTool famixTool = new FAMIXResourceTool();
-				famixTool.process(workspace+c, Integer.parseInt(c));
+				famixTool.process(workspace+c+suffix, Integer.parseInt(c));
 //			}
 		}
 		
@@ -202,11 +211,11 @@ public class App {
 		}
 	}
 
-	private static void filterMSE(String workspace) {
+	private static void filterMSE(String workspace, String suffix) {
 		String[] filteredEntities = new String[]{"Method","FileAnchor","Function","Class","Module","Package","NameSpace"};
 		MSETool mseTool = new MSETool();
 		mseTool.readMSE(workspace+"/model.mse");
-		mseTool.filterMSE(filteredEntities);
+		mseTool.filterMSE(filteredEntities, suffix);
 	}
 
 	private static void splitMSE(String workspace, int size) {

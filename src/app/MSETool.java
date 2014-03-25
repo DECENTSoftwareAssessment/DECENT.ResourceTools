@@ -87,7 +87,7 @@ public class MSETool {
 	}
 
 	
-	public void filterMSE(String[] filter) {
+	public void filterMSE(String[] filter, String pathSuffix) {
 		//TODO: check result for completeness
 		int length = content.length();
 			
@@ -136,7 +136,7 @@ public class MSETool {
 
 		System.out.println("  -> Writing "+filteredElements.size()/2+"/"+elements.length + " filtered elements");
 		filteredElements.add(suffix);
-		writeMSEelements(filteredElements, "filtered");
+		writeMSEelements(filteredElements, pathSuffix);
 	}
 
 	public void splitMSEi(int size, SPLIT_MODE mode) {
