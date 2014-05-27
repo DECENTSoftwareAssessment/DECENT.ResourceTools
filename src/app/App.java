@@ -30,9 +30,11 @@ public class App {
 	public static void main(String[] args) {
 		String workspace = "";
 		String ws = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/";
-		//ws = "./";
+		ws = "./";
 		
-		translateFAMIXcomplete(args[0], true);
+		if (checkForCompleteness(workspace)) {
+			translateFAMIXcomplete(args[0], true);
+		}
 		System.exit(0);
 		
 		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
@@ -79,6 +81,34 @@ public class App {
 		
 	}
 
+	private static boolean checkForCompleteness(String workspace) {
+		boolean isComplete = true;
+		File ws = new File(workspace);
+		String[] commits = ws.list();
+		Arrays.sort(commits, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				if (o1.equals(o2)) {
+					return 0;
+				} else if (Integer.parseInt(o1)>Integer.parseInt(o2)){
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+		});
+		
+		for (String c : commits) {
+			File model = new File(workspace+c+"/model.mse");
+			if (!model.exists()) {
+				isComplete=false;
+				System.out.println("Missing model for CommitID "+c);
+			}
+		}
+		return isComplete;
+	}
+	
 	private static void translateFAMIXcomplete(String workspace, boolean filter) {
 		File ws = new File(workspace);
 		String[] commits = ws.list();
