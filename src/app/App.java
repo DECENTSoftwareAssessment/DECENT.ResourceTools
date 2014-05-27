@@ -32,7 +32,7 @@ public class App {
 		String ws = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/";
 		ws = "./";
 		
-		if (checkForCompleteness(workspace)) {
+		if (checkForCompleteness(args[0])) {
 			translateFAMIXcomplete(args[0], true);
 		}
 		System.exit(0);
