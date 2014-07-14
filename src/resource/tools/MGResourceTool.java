@@ -2,6 +2,8 @@ package resource.tools;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -9,22 +11,29 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectValidator;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.teneo.PersistenceOptions;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
 import org.eclipse.emf.teneo.hibernate.HbHelper;
+import org.eclipse.xtext.EcoreUtil2;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import emf.resource.tools.ResourceTool;
 import AbstractDECENTProvider.AbstractDECENTProviderPackage;
+import MG.Content;
+import MG.HunkBlames;
 import MG.MGPackage;
+import MG.Patch;
+import MG.impl.ContentImpl;
+import MG.impl.HunkBlamesImpl;
 import MG.impl.MGPackageImpl;
 
 public class MGResourceTool extends ResourceTool {
 
 	//TODO: find a more appropriate way to handle mapping files
 	private String mappingFilePath;
-	public enum MODE {COMPLETE, CORE, NO_LINEBLAME_CONTENT, NO_LINEBLAME_CONTENT_PATCH};
+	public enum MODE {COMPLETE, CORE, NO_LINEBLAME, NO_LINEBLAME_CONTENT, NO_LINEBLAME_CONTENT_PATCH};
 	
 	public MGResourceTool() {
 		super(MGResourceTool.class.getName());
@@ -55,6 +64,9 @@ public class MGResourceTool extends ResourceTool {
 		case CORE:
 			mappingFilePath = "/mg-core.hbm.xml";
 			break;
+		case NO_LINEBLAME:
+			mappingFilePath = "/mg-no-lineblame.hbm.xml"; //no line blames
+			break;
 		case NO_LINEBLAME_CONTENT:
 			mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
 			break;
@@ -73,8 +85,25 @@ public class MGResourceTool extends ResourceTool {
 
 //		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 //	    storeResourceInDB(fromXMI.getContents(),dbName);
+		System.out.println("Loading resource from "+dbName+"...");
 	    Resource fromDB = loadResourceFromDB(dbName);
+	    
+	    cleanIllegalCharacters(fromDB);
+
+	    System.out.println("Storing resource...");
 		storeResourceContents(fromDB.getContents(), outputPathFromDB, extension);
+	}
+
+	private void cleanIllegalCharacters(Resource fromDB) {
+		System.out.println("Checking for illegal characters...");
+	    Collection<Patch> patches = EcoreUtil.getObjectsByType(fromDB.getContents(), MGPackage.eINSTANCE.getPatch());
+	    for (Patch p : patches) {
+	    	p.setPatch(p.getPatch().replace((char)0xC, (char)0x20));
+	    }
+	    Collection<Content> contents = EcoreUtil.getObjectsByType(fromDB.getContents(), MGPackage.eINSTANCE.getContent());
+	    for (Content c : contents) {
+	    	c.setContent(c.getContent().replace((char)0xC, (char)0x20));
+	    }
 	}
 	
 	public void initializeDB(String dbName) {
