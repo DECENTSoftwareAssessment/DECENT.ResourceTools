@@ -18,6 +18,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import resource.tools.BZResourceTool;
 import resource.tools.ConfigurationResourceTool;
 import resource.tools.DAGResourceTool;
+import resource.tools.DuDeResourceTool;
 import resource.tools.FAMIXResourceTool;
 import resource.tools.MGResourceTool;
 import resource.tools.MGResourceTool.MODE;
@@ -29,17 +30,23 @@ public class App {
 	
 	public static void main(String[] args) {
 		String workspace = "";
-		String ws = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/";
-		ws = "./";
+		String ws = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input";
+//		ws = "./";
+
+		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
+		configurationTool.process(ws,args[0]);
+		HashMap<String, String> settings = configurationTool.getSettings();
 		
+//		translateMG(settings,"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake",MODE.NO_LINEBLAME);
+		translateDuDe(settings,"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
+		
+		System.exit(0);
+
 		if (checkForCompleteness(args[0])) {
 			translateFAMIXcomplete(args[0], true);
 		}
 		System.exit(0);
 		
-		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
-		configurationTool.process(ws,args[0]);
-		HashMap<String, String> settings = configurationTool.getSettings();
 		translateBZ(settings,"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
 		//translateMG(settings,ws,MODE.NO_LINEBLAME_CONTENT_PATCH);
 
@@ -215,6 +222,18 @@ public class App {
 		return output.toString();
 
 	} 
+
+	private static void translateDuDe(HashMap<String,String> settings,String workspace) {
+		
+		DuDeResourceTool dudeTool = new DuDeResourceTool();
+		dudeTool.setDbUser(settings.get("dbUser"));
+		dudeTool.setDbPass(settings.get("dbPass"));
+		dudeTool.setDbServer(settings.get("dbServer"));
+		dudeTool.setDbPort(settings.get("dbPort"));
+
+		dudeTool.process(workspace,settings.get("dbName"), DuDeResourceTool.MODE.COMPLETE);
+	}
+
 	
 	private static void translateBZ(HashMap<String,String> settings, String workspace) {
 		BZResourceTool bzTool = new BZResourceTool();
