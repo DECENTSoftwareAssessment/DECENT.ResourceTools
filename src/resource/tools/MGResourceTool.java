@@ -248,4 +248,12 @@ public class MGResourceTool extends ResourceTool {
 
 		return props;
 	}
+
+	public String getMappingFilePath() {
+		return mappingFilePath;
+	}
+
+	public void setMappingFilePath(String mappingFilePath) {
+		this.mappingFilePath = mappingFilePath;
+	}
 }
