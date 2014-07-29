@@ -2,6 +2,7 @@ package app;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -18,6 +20,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import resource.tools.BZResourceTool;
 import resource.tools.ConfigurationResourceTool;
 import resource.tools.DAGResourceTool;
+import resource.tools.DECENTResourceTool;
 import resource.tools.DuDeResourceTool;
 import resource.tools.FAMIXResourceTool;
 import resource.tools.MGResourceTool;
@@ -26,69 +29,65 @@ import Configuration.Setting;
 import app.MSETool.SPLIT_MODE;
 
 public class App {
+	private Properties properties = new Properties();
 
-	
-	public static void main(String[] args) {
-		String workspace = "";
-		String ws = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input";
-//		ws = "./";
-
-		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
-		configurationTool.process(ws,args[0]);
-		HashMap<String, String> settings = configurationTool.getSettings();
-		
-//		translateMG(settings,"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake",MODE.NO_LINEBLAME);
-		translateDuDe(settings,"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
-		
-		System.exit(0);
-
-		if (checkForCompleteness(args[0])) {
-			translateFAMIXcomplete(args[0], true);
+	public void loadProperties(String propertiesFilename) throws Exception {
+		System.out.println("INIT: Loading settings...");
+		properties.load(new FileInputStream(propertiesFilename));
+	}
+	public void executeSteps() throws Exception {
+		String dataLocation = properties.getProperty("dataLocation");
+		String project = properties.getProperty("project");
+		String location = dataLocation+project;
+		for (String step : properties.getProperty("steps").split(",")) {
+			executeTranslation(step, location);
 		}
-		System.exit(0);
-		
-		translateBZ(settings,"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
-		//translateMG(settings,ws,MODE.NO_LINEBLAME_CONTENT_PATCH);
+	}	
+	public void executeTranslation(String step, String location) throws Exception {
+		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
+		System.out.println("TRANSLATE: "+step+"...");
+		switch (step) {
+		case "DECENT":
+			translateDECENT(location);
+			break;
+		case "MG":
+			String mgConfiguration = properties.getProperty("mgConfiguration");
+			configurationTool.process(location, mgConfiguration );
+			translateMG(configurationTool.getSettings(),location,MODE.NO_LINEBLAME);
+			break;
+		case "BZ":
+			String bzConfiguration = properties.getProperty("bzConfiguration");
+			configurationTool.process(location, bzConfiguration);
+			translateBZ(configurationTool.getSettings(),location);
+			break;
+		case "FAMIX":
+			if (checkForCompleteness(location)) {
+				boolean filterFamix = Boolean.parseBoolean(properties.getProperty("filterFamix"));
+				translateFAMIXcomplete(location, filterFamix);
+			}
+			break;
+		case "DAG":
+			String gitPath = properties.getProperty("gitPath");
+			generateDAG(location, gitPath);
+			translateDAG(location);
+			break;
+		case "DUDE":
+			String dudeConfiguration = properties.getProperty("dudeConfiguration");
+			configurationTool.process(location, dudeConfiguration );
+			translateDuDe(configurationTool.getSettings(),"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
+			break;
+		default:
+			break;
+		}
 
-		System.exit(0);
-
-		
-		String gitPath = "/Users/philip-iii/Dev/workspaces/emf/DECENT.ResourceTools/.git";
-		
-		gitPath = "/home/msr/Dev/Resources/git/copies/.git";
-		workspace = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/dag";
-		generateDAG(workspace, gitPath);
-		translateDAG(workspace);
-
-		//translateMG("172.16.179.143","3306","mg_copies","/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/copies", MODE.NO_LINEBLAME_CONTENT);
-
-		System.exit(0);
-		
-		
-		int size = 20;
-		splitMSE(workspace, size);
-
-		translateSplitMSE(workspace, size);
-				
-		filterMSE(workspace, "filtered");
-
-		//TODO: figure out cross-file linking as at the moment this results in  a ton of junk!
-		translateFAMIX("/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/fmx/mahr-sample-o/filtered/");
-		
-		translateDAG("/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/dag");
-
-		//translateBZ("localhost","3306","bz_x","/home/philip-iii/Dev/workspaces/emf/DECENT.Transformations/input/bz/");
-		
-		
-		workspace = "/Users/philip-iii/Dev/workspaces/emf/DECENT.Transformations/output";
-//		DECENTResourceTool decentTool = new DECENTResourceTool();
-//		decentTool.process(workspace);
-		
-		translateFAMIXcomplete(args[0], true);
-		
+	}
+	public static void main(String[] args) throws Exception {
+		App app = new App();
+		app.loadProperties(args[0]);
+		app.executeSteps();
 	}
 
-	private static boolean checkForCompleteness(String workspace) {
+	private boolean checkForCompleteness(String workspace) {
 		boolean isComplete = true;
 		File ws = new File(workspace);
 		String[] commits = ws.list();
@@ -116,7 +115,7 @@ public class App {
 		return isComplete;
 	}
 	
-	private static void translateFAMIXcomplete(String workspace, boolean filter) {
+	private void translateFAMIXcomplete(String workspace, boolean filter) {
 		File ws = new File(workspace);
 		String[] commits = ws.list();
 		Arrays.sort(commits, new Comparator<String>() {
@@ -156,27 +155,37 @@ public class App {
 //		}
 	}
 
-	private static void translateFAMIX(String workspace) {
+	private void translateFAMIX(String workspace) {
 		FAMIXResourceTool famixTool = new FAMIXResourceTool();
 		famixTool.process(workspace, 1);
 	}
+	private void translateDECENT(String workspace) {
+		DECENTResourceTool tool = new DECENTResourceTool();
+		Resource resource = tool.loadResourceFromXMI(workspace+"/model.decent","decent");
+		tool.storeBinaryResourceContents(resource.getContents(), workspace+"/model.decent"+"bin", "decentbin");
+	}
 
-	private static void translateDAG(String workspace) {
+	private void translateDAG(String workspace) {
 		DAGResourceTool dagTool = new DAGResourceTool();
 		dagTool.process(workspace);
 	}
 
-	private static void generateDAG(String workspace, String gitPath) {
+	private void generateDAG(String workspace, String gitPath) {
 		List<String> command = new ArrayList<String>();
-
-		command.add("ssh");
-		command.add("msr@172.16.179.143");
-		
+		String sshURI = properties.getProperty("sshURI");
+		String sshPort = properties.getProperty("sshPort");
+		boolean useSSH = Boolean.parseBoolean(properties.getProperty("useSSH"));
+		if (useSSH ) {
+			command.add("ssh");
+			command.add(sshURI);
+			command.add("-p");
+			command.add(sshPort);
+		}
 		command.add("git");
 		command.add("--git-dir="+gitPath+"");
 		command.add("log");
 		command.add("--topo-order");
-		command.add("--pretty=format:%H\\ %P");
+		command.add("--pretty=format:%H %P");
 		command.add("--parents");
 		command.add("-M");
 		command.add("-C");
@@ -186,7 +195,7 @@ public class App {
 		System.out.println(executeCommand(command, workspace+"/model.dagx"));;
 	}
 
-	private static String executeCommand(List<String> command, String outputFilename) {
+	private String executeCommand(List<String> command, String outputFilename) {
 
 		StringBuffer output = new StringBuffer();
 
@@ -223,7 +232,7 @@ public class App {
 
 	} 
 
-	private static void translateDuDe(HashMap<String,String> settings,String workspace) {
+	private void translateDuDe(HashMap<String,String> settings,String workspace) {
 		
 		DuDeResourceTool dudeTool = new DuDeResourceTool();
 		dudeTool.setDbUser(settings.get("dbUser"));
@@ -235,16 +244,16 @@ public class App {
 	}
 
 	
-	private static void translateBZ(HashMap<String,String> settings, String workspace) {
+	private void translateBZ(HashMap<String,String> settings, String workspace) {
 		BZResourceTool bzTool = new BZResourceTool();
 		bzTool.setDbUser(settings.get("dbUser"));
 		bzTool.setDbPass(settings.get("dbPass"));
 		bzTool.setDbServer(settings.get("dbServer"));
 		bzTool.setDbPort(settings.get("dbPort"));
-		bzTool.process(workspace,settings.get("BZdbName"));
+		bzTool.process(workspace,settings.get("dbName"));
 	}
 
-	private static void translateMG(HashMap<String,String> settings, String workspace, MODE mode) {
+	private void translateMG(HashMap<String,String> settings, String workspace, MODE mode) {
 		MGResourceTool mgTool = new MGResourceTool();
 		mgTool.setDbUser(settings.get("dbUser"));
 		mgTool.setDbPass(settings.get("dbPass"));
@@ -253,21 +262,21 @@ public class App {
 		mgTool.process(workspace,settings.get("dbName"),mode);
 	}
 
-	private static void translateSplitMSE(String workspace, int size) {
+	private void translateSplitMSE(String workspace, int size) {
 		for (int i=0; i<size; i++) { 
 			FAMIXResourceTool famixTool = new FAMIXResourceTool();
 			famixTool.process(workspace+"/"+i, 1);
 		}
 	}
 
-	private static void filterMSE(String workspace, String suffix) {
+	private void filterMSE(String workspace, String suffix) {
 		String[] filteredEntities = new String[]{"Method","FileAnchor","Function","Class","Module","Package","NameSpace"};
 		MSETool mseTool = new MSETool();
 		mseTool.readMSE(workspace+"/model.mse");
 		mseTool.filterMSE(filteredEntities, suffix);
 	}
 
-	private static void splitMSE(String workspace, int size) {
+	private void splitMSE(String workspace, int size) {
 		MSETool splitter = new MSETool();
 		splitter.readMSE(workspace+"/model.mse");
 		splitter.splitMSEi(size, SPLIT_MODE.COUNT);
