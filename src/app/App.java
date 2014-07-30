@@ -47,8 +47,11 @@ public class App {
 		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
 		System.out.println("TRANSLATE: "+step+"...");
 		switch (step) {
-		case "DECENT":
-			translateDECENT(location);
+		case "DECENT2BIN":
+			translateDECENT2BIN(location);
+			break;
+		case "BIN2DECENT":
+			translateBIN2DECENT(location);
 			break;
 		case "MG":
 			String mgConfiguration = properties.getProperty("mgConfiguration");
@@ -159,10 +162,15 @@ public class App {
 		FAMIXResourceTool famixTool = new FAMIXResourceTool();
 		famixTool.process(workspace, 1);
 	}
-	private void translateDECENT(String workspace) {
+	private void translateDECENT2BIN(String workspace) {
 		DECENTResourceTool tool = new DECENTResourceTool();
 		Resource resource = tool.loadResourceFromXMI(workspace+"/model.decent","decent");
 		tool.storeBinaryResourceContents(resource.getContents(), workspace+"/model.decent"+"bin", "decentbin");
+	}
+	private void translateBIN2DECENT(String workspace) {
+		DECENTResourceTool tool = new DECENTResourceTool();
+		Resource resource = tool.loadResourceFromBinary(workspace+"/model.decentbin","decentbin");
+		tool.storeResourceContents(resource.getContents(), workspace+"/model.decent", "decent");
 	}
 
 	private void translateDAG(String workspace) {
