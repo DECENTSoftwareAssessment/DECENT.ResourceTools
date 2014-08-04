@@ -40,8 +40,8 @@ public class DECENTResourceTool extends ResourceTool {
 
 		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 //	    validateResource(fromXMI);
-		System.out.println("***"+((Model)fromXMI.getContents().get(0)).getAgentPool().getAgents().get(0).getActivities().get(15).getState().getValues().get(0).getOfAttribute().getName());
-		System.out.println("***"+((Model)fromXMI.getContents().get(0)).getAgentPool().getAgents().get(0).getActivities().get(15).getState().getValues().get(0).getName());
+//		System.out.println("***"+((Model)fromXMI.getContents().get(0)).getAgentPool().getAgents().get(0).getActivities().get(15).getState().getValues().get(0).getOfAttribute().getName());
+//		System.out.println("***"+((Model)fromXMI.getContents().get(0)).getAgentPool().getAgents().get(0).getActivities().get(15).getState().getValues().get(0).getName());
 
 //		storeResourceContents(fromXMI.getContents(), outputPathValidated, extension);
 
