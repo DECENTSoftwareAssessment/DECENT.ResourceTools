@@ -119,7 +119,7 @@ public class App {
 	}
 	
 	private void translateFAMIXcomplete(String workspace, boolean filter) {
-		File ws = new File(workspace);
+		File ws = new File(workspace+"/famix");
 		String[] commits = ws.list();
 		Arrays.sort(commits, new Comparator<String>() {
 
