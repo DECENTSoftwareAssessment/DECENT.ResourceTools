@@ -109,7 +109,7 @@ public class App {
 		});
 		
 		for (String c : commits) {
-			File model = new File(workspace+c+"/model.mse");
+			File model = new File(workspace+"/"+c+"/model.mse");
 			if (!model.exists()) {
 				isComplete=false;
 				System.out.println("Missing model for CommitID "+c);
@@ -119,7 +119,7 @@ public class App {
 	}
 	
 	private void translateFAMIXcomplete(String workspace, boolean filter) {
-		File ws = new File(workspace+"/famix");
+		File ws = new File(workspace);
 		String[] commits = ws.list();
 		Arrays.sort(commits, new Comparator<String>() {
 
@@ -141,11 +141,11 @@ public class App {
 				String suffix = "";
 				if (filter) {
 					suffix = "filtered";
-					filterMSE(workspace+c, suffix);
+					filterMSE(workspace+"/"+c, suffix);
 					suffix = "/"+suffix;
 				}
 				FAMIXResourceTool famixTool = new FAMIXResourceTool();
-				famixTool.process(workspace+c+suffix, Integer.parseInt(c));
+				famixTool.process(workspace+"/"+c+suffix, Integer.parseInt(c));
 //			}
 		}
 		
