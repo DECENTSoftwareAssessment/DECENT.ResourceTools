@@ -64,9 +64,9 @@ public class App {
 			translateBZ(configurationTool.getSettings(),location);
 			break;
 		case "FAMIX":
-			if (checkForCompleteness(location)) {
+			if (checkForCompleteness(location+"/famix")) {
 				boolean filterFamix = Boolean.parseBoolean(properties.getProperty("filterFamix"));
-				translateFAMIXcomplete(location, filterFamix);
+				translateFAMIXcomplete(location+"/famix", filterFamix);
 			}
 			break;
 		case "DAG":
