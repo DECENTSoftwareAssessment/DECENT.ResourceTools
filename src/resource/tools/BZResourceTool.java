@@ -156,7 +156,7 @@ public class BZResourceTool extends ResourceTool {
 			logInfo("  Cleaning comments...");
 			
 			for (int i=0; i<32; i++) {
-				String c = Integer.toHexString(i);
+				String c = "0x"+Integer.toHexString(i);
 				Query cleanCommentsQuery = session.createSQLQuery(
 						"UPDATE BZComment B " + 
 								"SET commentText = REPLACE (commentText, CHAR("+c+" using utf8), '') " +
