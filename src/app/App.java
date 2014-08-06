@@ -45,6 +45,7 @@ public class App {
 	}	
 	public void executeTranslation(String step, String location) throws Exception {
 		ConfigurationResourceTool configurationTool = new ConfigurationResourceTool();
+		String mgConfiguration = "";
 		System.out.println("TRANSLATE: "+step+"...");
 		switch (step) {
 		case "DECENT2BIN":
@@ -54,9 +55,14 @@ public class App {
 			translateBIN2DECENT(location);
 			break;
 		case "MG":
-			String mgConfiguration = properties.getProperty("mgConfiguration");
+			mgConfiguration = properties.getProperty("mgConfiguration");
 			configurationTool.process(location, mgConfiguration );
 			translateMG(configurationTool.getSettings(),location,MODE.NO_LINEBLAME);
+			break;
+		case "MGLite":
+			mgConfiguration = properties.getProperty("mgConfiguration");
+			configurationTool.process(location, mgConfiguration );
+			translateMG(configurationTool.getSettings(),location,MODE.NO_LINEBLAME_CONTENT_PATCH);
 			break;
 		case "BZ":
 			String bzConfiguration = properties.getProperty("bzConfiguration");
