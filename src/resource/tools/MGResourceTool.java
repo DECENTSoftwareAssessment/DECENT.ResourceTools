@@ -88,12 +88,32 @@ public class MGResourceTool extends ResourceTool {
 		System.out.println("Loading resource from "+dbName+"...");
 	    Resource fromDB = loadResourceFromDB(dbName);
 	    
-	    cleanIllegalCharacters(fromDB);
+	    //cleanIllegalCharacters(fromDB);
 
 	    System.out.println("Storing resource...");
 		storeResourceContents(fromDB.getContents(), outputPathFromDB, extension);
 	}
 
+	private void cleanIllegalCharactersInDB(HbDataStore hbds) {
+		logInfo("  Cleaning illegal characters...");
+		hbds.getHbContext();
+		Session session = hbds.getSessionFactory().openSession();
+
+		for (int i=0; i<32; i++) {
+			String c = "0x"+Integer.toHexString(i);
+			Query cleanContentQuery = session.createSQLQuery(
+					"UPDATE content B " + 
+							"SET content = REPLACE (content, CHAR("+c+" using utf8), '') ");
+			cleanContentQuery.executeUpdate();
+			Query cleanPatchesQuery = session.createSQLQuery(
+					"UPDATE patches B " + 
+							"SET patch = REPLACE (patch, CHAR("+c+" using utf8), '') ");
+			cleanPatchesQuery.executeUpdate();
+		}
+		session.close();
+		logInfo("  ...done");
+	}
+	
 	private void cleanIllegalCharacters(Resource fromDB) {
 		System.out.println("Checking for illegal characters...");
 	    Collection<Patch> patches = EcoreUtil.getObjectsByType(fromDB.getContents(), MGPackage.eINSTANCE.getPatch());
@@ -153,7 +173,7 @@ public class MGResourceTool extends ResourceTool {
 		//TODO: consider refining containment relationships (but how? revision-centric? file-centric? people-centric? these are all just views)
 		
 		firstRunSetup(hbds);
-		
+		cleanIllegalCharactersInDB(hbds);
 	}
 
 	private void firstRunSetup(HbDataStore hbds) {
