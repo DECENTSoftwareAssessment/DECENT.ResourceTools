@@ -99,8 +99,14 @@ public class MGResourceTool extends ResourceTool {
 		hbds.getHbContext();
 		Session session = hbds.getSessionFactory().openSession();
 
-		for (int i=0; i<32; i++) {
+		for (int i=0; i<20; i++) {
+			//Skip 0x9 (TAB), 0xA (CR?), 0xD (LF?)
 			String c = "0x"+Integer.toHexString(i);
+			if (c.equals("0x9") 
+					|| c.equalsIgnoreCase("0xa") 
+					|| c.equalsIgnoreCase("0xD")) {
+				continue;
+			}
 			Query cleanContentQuery = session.createSQLQuery(
 					"UPDATE content B " + 
 							"SET content = REPLACE (content, CHAR("+c+" using utf8), '') ");

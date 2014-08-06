@@ -155,8 +155,14 @@ public class BZResourceTool extends ResourceTool {
 			//TODO: this should probably be included in MG as well
 			logInfo("  Cleaning comments...");
 			
-			for (int i=0; i<32; i++) {
+			for (int i=0; i<20; i++) {
+				//Skip 0x9 (TAB), 0xA (CR?), 0xD (LF?)
 				String c = "0x"+Integer.toHexString(i);
+				if (c.equals("0x9") 
+						|| c.equalsIgnoreCase("0xa") 
+						|| c.equalsIgnoreCase("0xD")) {
+					continue;
+				}
 				Query cleanCommentsQuery = session.createSQLQuery(
 						"UPDATE BZComment B " + 
 								"SET commentText = REPLACE (commentText, CHAR("+c+" using utf8), '') " +
