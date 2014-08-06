@@ -155,7 +155,7 @@ public class BZResourceTool extends ResourceTool {
 			//TODO: this should probably be included in MG as well
 			logInfo("  Cleaning comments...");
 			
-			String[] characters = new String[]{"0x1a", "0x1b", "0x1f", "0x8"};
+			String[] characters = new String[]{"0x1a", "0x1b", "0x1f", "0x8", "0x12"};
 			for (String c : characters) {
 				Query cleanCommentsQuery = session.createSQLQuery(
 						"UPDATE BZComment B " + 
