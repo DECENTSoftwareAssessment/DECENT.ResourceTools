@@ -31,9 +31,17 @@ import app.MSETool.SPLIT_MODE;
 public class App {
 	private Properties properties = new Properties();
 
-	public void loadProperties(String propertiesFilename) throws Exception {
-		System.out.println("INIT: Loading settings...");
+	public void loadProperties(String[] arguments) throws Exception {
+		if (arguments.length < 1) {
+			System.out.println("No configuration provided! Usage: <CONFIGURATION> [<STEPS>]");
+			System.exit(0);
+		}
+		String propertiesFilename = arguments[0];
+		System.out.println("INIT: Loading settings from "+propertiesFilename+"...");
 		properties.load(new FileInputStream(propertiesFilename));
+		if (arguments.length == 2) {
+			properties.setProperty("steps", arguments[1]);
+		}
 	}
 	public void executeSteps() throws Exception {
 		String dataLocation = properties.getProperty("dataLocation");
@@ -95,7 +103,7 @@ public class App {
 	}
 	public static void main(String[] args) throws Exception {
 		App app = new App();
-		app.loadProperties(args[0]);
+		app.loadProperties(args);
 		app.executeSteps();
 	}
 
