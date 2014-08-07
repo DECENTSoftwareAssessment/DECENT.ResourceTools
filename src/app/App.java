@@ -51,6 +51,9 @@ public class App {
 		case "DECENT2BIN":
 			translateDECENT2BIN(location);
 			break;
+		case "MG2BIN":
+			translateMG2BIN(location);
+			break;
 		case "BIN2DECENT":
 			translateBIN2DECENT(location);
 			break;
@@ -167,6 +170,11 @@ public class App {
 	private void translateFAMIX(String workspace) {
 		FAMIXResourceTool famixTool = new FAMIXResourceTool();
 		famixTool.process(workspace, 1);
+	}
+	private void translateMG2BIN(String workspace) {
+		MGResourceTool tool = new MGResourceTool();
+		Resource resource = tool.loadResourceFromXMI(workspace+"/model.mg","mg");
+		tool.storeBinaryResourceContents(resource.getContents(), workspace+"/model.mg"+"bin", "mgbin");
 	}
 	private void translateDECENT2BIN(String workspace) {
 		DECENTResourceTool tool = new DECENTResourceTool();
