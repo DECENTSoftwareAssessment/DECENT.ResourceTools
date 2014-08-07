@@ -97,6 +97,7 @@ public class App {
 			translateDuDe(configurationTool.getSettings(),"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
 			break;
 		default:
+			System.out.println("ERROR: Unknown step "+step);
 			break;
 		}
 
