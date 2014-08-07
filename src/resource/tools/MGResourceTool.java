@@ -105,7 +105,7 @@ public class MGResourceTool extends ResourceTool {
 		hbds.getHbContext();
 		Session session = hbds.getSessionFactory().openSession();
 
-		for (int i=0; i<20; i++) {
+		for (int i=0; i<32; i++) {
 			//Skip 0x9 (TAB), 0xA (CR?), 0xD (LF?)
 			String c = "0x"+Integer.toHexString(i);
 			if (c.equals("0x9") 
