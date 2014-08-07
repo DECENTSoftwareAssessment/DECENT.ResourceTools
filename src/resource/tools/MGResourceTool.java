@@ -33,6 +33,7 @@ public class MGResourceTool extends ResourceTool {
 
 	//TODO: find a more appropriate way to handle mapping files
 	private String mappingFilePath;
+	private boolean sanitiseDB = false;
 	public enum MODE {COMPLETE, CORE, NO_LINEBLAME, NO_LINEBLAME_CONTENT, NO_LINEBLAME_CONTENT_PATCH};
 	
 	public MGResourceTool() {
@@ -60,12 +61,14 @@ public class MGResourceTool extends ResourceTool {
 		switch (mode) {
 		case COMPLETE:
 			mappingFilePath = "/mg.hbm.xml"; 
+			sanitiseDB=true;
 			break;
 		case CORE:
 			mappingFilePath = "/mg-core.hbm.xml";
 			break;
 		case NO_LINEBLAME:
 			mappingFilePath = "/mg-no-lineblame.hbm.xml"; //no line blames
+			sanitiseDB=true;
 			break;
 		case NO_LINEBLAME_CONTENT:
 			mappingFilePath = "/mg-no-content-lineblame.hbm.xml"; //no content and line blames
@@ -95,6 +98,9 @@ public class MGResourceTool extends ResourceTool {
 	}
 
 	private void cleanIllegalCharactersInDB(HbDataStore hbds) {
+		if (!sanitiseDB) {
+			return;
+		}
 		logInfo("  Cleaning illegal characters...");
 		hbds.getHbContext();
 		Session session = hbds.getSessionFactory().openSession();
@@ -179,7 +185,6 @@ public class MGResourceTool extends ResourceTool {
 		//TODO: consider refining containment relationships (but how? revision-centric? file-centric? people-centric? these are all just views)
 		
 		firstRunSetup(hbds);
-		cleanIllegalCharactersInDB(hbds);
 	}
 
 	private void firstRunSetup(HbDataStore hbds) {
@@ -238,6 +243,7 @@ public class MGResourceTool extends ResourceTool {
 		}
 
 		session.close();
+		cleanIllegalCharactersInDB(hbds);
 	}
 
 	private void saveReferenceMappings(HbDataStore hbds, String mappingRefFilePath) {
