@@ -319,7 +319,8 @@ public class App {
 	}
 
 	private void filterMSE(String workspace, String suffix) {
-		String[] filteredEntities = new String[]{"Method","FileAnchor","Function","Class","Module","Package","NameSpace"};
+		String[] filteredEntities = properties.getProperty("filteredElements").split(",");
+		//String[] filteredEntities = new String[]{"Method","FileAnchor","Function","Class","Module","Package","NameSpace"};
 		MSETool mseTool = new MSETool();
 		mseTool.readMSE(workspace+"/model.mse");
 		mseTool.filterMSE(filteredEntities, suffix);
