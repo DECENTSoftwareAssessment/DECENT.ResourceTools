@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -152,7 +154,15 @@ public class App {
 				}
 			}
 		});
-		
+		String project = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+				+ "<projectDescription>" 
+				+ "<name>FAMIX</name>"
+				+ "<comment></comment>" 
+				+ "<projects></projects>"
+				+ "<buildSpec></buildSpec>" 
+				+ "<natures></natures>"
+				+ "</projectDescription>";
+
 		for (String c : commits) {
 //			if (c.equals("3")) {
 //				System.out.println("Processing: "+c);
@@ -162,8 +172,16 @@ public class App {
 					filterMSE(workspace+"/"+c, suffix);
 					suffix = "/"+suffix;
 				}
+				File projectFile = new File(workspace+"/"+c+suffix + "/.project");
+				try {
+					FileUtils.writeStringToFile(projectFile, project);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				FAMIXResourceTool famixTool = new FAMIXResourceTool();
 				famixTool.process(workspace+"/"+c+suffix, Integer.parseInt(c));
+				FileUtils.deleteQuietly(projectFile);
+				
 //			}
 		}
 		
