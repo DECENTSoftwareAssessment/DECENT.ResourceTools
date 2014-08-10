@@ -121,6 +121,10 @@ public class MGResourceTool extends ResourceTool {
 					"UPDATE patches B " + 
 							"SET patch = REPLACE (patch, CHAR("+c+" using utf8), '') ");
 			cleanPatchesQuery.executeUpdate();
+			Query cleanMessagesQuery = session.createSQLQuery(
+					"UPDATE scmlog B " + 
+							"SET message = REPLACE (message, CHAR("+c+" using utf8), '') ");
+			cleanMessagesQuery.executeUpdate();
 		}
 		session.close();
 		logInfo("  ...done");
