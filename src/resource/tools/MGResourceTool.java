@@ -56,6 +56,7 @@ public class MGResourceTool extends ResourceTool {
 		String outputPath = workspace+"/model-source.mg";
 		String outputPathFromDB = workspace+"/model.mg";
 		String extension = "mg";
+		sanitiseDB=true;
 		
 		//mappingFilePath is relative to mapping which should be in the class path
 		switch (mode) {
