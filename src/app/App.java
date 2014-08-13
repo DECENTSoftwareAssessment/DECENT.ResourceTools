@@ -96,7 +96,7 @@ public class App {
 		case "DUDE":
 			String dudeConfiguration = properties.getProperty("dudeConfiguration");
 			configurationTool.process(location, dudeConfiguration );
-			translateDuDe(configurationTool.getSettings(),"/Users/philip-iii/Dev/workspaces/emf/DECENT.Data/input/yakuake");
+			translateDuDe(configurationTool.getSettings(),location);
 			break;
 		default:
 			System.out.println("ERROR: Unknown step "+step);
