@@ -9,7 +9,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 
+import com.google.common.collect.LinkedHashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.TreeMultiset;
 import com.google.common.io.PatternFilenameFilter;
+import com.mysql.jdbc.StringUtils;
 
 public class MSETool {
 
@@ -100,6 +104,9 @@ public class MSETool {
 		
 		prefix = "(\n";
 		
+		Multiset<String> stats = TreeMultiset.create();
+		Pattern p = Pattern.compile("(?s)^\\(FAMIX\\.(.+?)\\s.+");
+		
 		ArrayList<String> filteredElements = new ArrayList<>();
 		filteredElements.add(prefix);
 		
@@ -121,6 +128,11 @@ public class MSETool {
 				if (e.matches(pattern)) {
 					filteredElements.add(e);
 					filteredElements.add(delimiter);
+				} else {
+					Matcher m = p.matcher(e);
+					if (m.find()) {
+						stats.add(m.group(1));
+					}
 				}
 			} else {
 				if (e.startsWith("(FAMIX.Method") 
@@ -130,11 +142,22 @@ public class MSETool {
 						|| e.startsWith("(FAMIX.Module")) {
 					filteredElements.add(e);
 					filteredElements.add(delimiter);
+				} else {
+					Matcher m = p.matcher(e);
+					if (m.find()) {
+						stats.add(m.group(1));
+					}
 				}
 			}
 		}
 
 		System.out.println("  -> Writing "+filteredElements.size()/2+"/"+elements.length + " filtered elements");
+		System.out.println("  -> Skipping "+stats.size()+"/"+elements.length + " elements:");
+
+		for (String element : stats.elementSet()) {
+			String e = String.format("%-16s %16s", element, stats.count(element)+"/"+elements.length);
+			System.out.println("       "+e);
+		}
 		filteredElements.add(suffix);
 		writeMSEelements(filteredElements, pathSuffix);
 	}
