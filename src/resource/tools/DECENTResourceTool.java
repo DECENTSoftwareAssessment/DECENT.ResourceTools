@@ -1,27 +1,21 @@
 package resource.tools;
 
-import java.util.Collection;
-import java.util.Map;
-
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.EValidator;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectValidator;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import emf.resource.tools.ResourceTool;
 import DECENT.DECENTPackage;
-import DECENT.Model;
 import DECENT.impl.DECENTPackageImpl;
+import DECENT.util.DECENTResourceFactoryImpl;
+import emf.resource.tools.ResourceTool;
 
 public class DECENTResourceTool extends ResourceTool {
 	
 	public DECENTResourceTool(){
 		super(DECENTResourceTool.class.getName());
 		DECENTPackageImpl.init();
+		this.resourceFactory = new DECENTResourceFactoryImpl();
 		initializeValidator();
 		injector = null;
 	}
