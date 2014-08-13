@@ -155,7 +155,7 @@ public class MSETool {
 		System.out.println("  -> Skipping "+stats.size()+"/"+elements.length + " elements:");
 
 		for (String element : stats.elementSet()) {
-			String e = String.format("%-16s %16s", element, stats.count(element)+"/"+elements.length);
+			String e = String.format("%-20s %20s", element, stats.count(element)+"/"+elements.length);
 			System.out.println("       "+e);
 		}
 		filteredElements.add(suffix);
