@@ -28,5 +28,6 @@ Require-Bundle: org.eclipse.emf.common,
  famix.m3x,
  BZ,
  Configuration,
- DuDe
+ DuDe,
+ CFA
 Export-Package: resource.tools
