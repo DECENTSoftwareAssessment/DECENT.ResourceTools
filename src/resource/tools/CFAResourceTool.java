@@ -28,7 +28,7 @@ public class CFAResourceTool extends ResourceTool {
 	public void process(String workspace) {
 		String outputPath = workspace+"/model.cfa";
 		String outputPathValidated = workspace+"/model.cfa";
-		String extension = "decent";
+		String extension = "cfa";
 
 		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 //	    validateResource(fromXMI);
