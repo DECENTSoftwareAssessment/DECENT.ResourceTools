@@ -28,7 +28,7 @@ public class ARFFxResourceTool extends ResourceTool {
 	public void process(String workspace) {
 		String outputPath = workspace+"/model.arffx";
 		String outputPathValidated = workspace+"/model.arffx";
-		String extension = "cfa";
+		String extension = "arffx";
 
 		Resource fromXMI = loadResourceFromXMI(outputPath, extension);
 //	    validateResource(fromXMI);
