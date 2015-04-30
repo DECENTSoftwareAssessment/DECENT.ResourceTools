@@ -29,5 +29,6 @@ Require-Bundle: org.eclipse.emf.common,
  BZ,
  Configuration,
  DuDe,
- CFA
+ CFA,
+ ARFFx
 Export-Package: resource.tools
