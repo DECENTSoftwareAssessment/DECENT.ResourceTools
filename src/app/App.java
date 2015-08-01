@@ -234,7 +234,7 @@ public class App {
 		command.add("--git-dir="+gitPath+"");
 		command.add("log");
 		command.add("--topo-order");
-		command.add("--pretty=format:%H\\ %P");
+		command.add("--pretty=format:%H %P");
 		command.add("--parents");
 		command.add("-M");
 		command.add("-C");
