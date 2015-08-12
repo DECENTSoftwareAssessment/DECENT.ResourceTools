@@ -61,6 +61,12 @@ public class App {
 		case "DECENT2BIN":
 			translateDECENT2BIN(location);
 			break;
+		case "DECENT2JSON":
+			translateDECENT2JSON(location);
+			break;
+		case "JSON2DECENT":
+			translateJSON2DECENT(location);
+			break;
 		case "MG2BIN":
 			translateMG2BIN(location);
 			break;
@@ -207,6 +213,16 @@ public class App {
 		DECENTResourceTool tool = new DECENTResourceTool();
 		Resource resource = tool.loadResourceFromXMI(workspace+"/model.decent","decent");
 		tool.storeBinaryResourceContents(resource.getContents(), workspace+"/model.decent"+"bin", "decentbin");
+	}
+	private void translateDECENT2JSON(String workspace) {
+		DECENTResourceTool tool = new DECENTResourceTool();
+		Resource resource = tool.loadResourceFromXMI(workspace+"/model.decent","decent");
+		tool.storeResourceInJSON(resource.getContents(), workspace+"/model.decent"+"json", "decentjson");
+	}
+	private void translateJSON2DECENT(String workspace) {
+		DECENTResourceTool tool = new DECENTResourceTool();
+		Resource resource = tool.loadResourceFromJSON(workspace+"/model.decentjson","decentjson");
+		tool.storeResourceContents(resource.getContents(), workspace+"/model.decent", "decent");
 	}
 	private void translateBIN2DECENT(String workspace) {
 		DECENTResourceTool tool = new DECENTResourceTool();
