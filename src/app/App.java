@@ -3,6 +3,7 @@ package app;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -250,7 +251,7 @@ public class App {
 		command.add("--git-dir="+gitPath+"");
 		command.add("log");
 		command.add("--topo-order");
-		command.add("--pretty=format:%H %P");
+		command.add("--pretty=format:%H-%P");
 		command.add("--parents");
 		command.add("-M");
 		command.add("-C");
@@ -267,8 +268,13 @@ public class App {
 		try {
 			ProcessBuilder pb = new ProcessBuilder(command);
 			File outputFile = new File(outputFilename);
-			outputFile.getParentFile().mkdirs();
-			pb.redirectOutput(outputFile);
+			if (outputFile.exists()) {
+				outputFile.delete();
+			}
+
+			File outputFileTMP = new File(outputFilename+".tmp");
+			outputFileTMP.getParentFile().mkdirs();
+			pb.redirectOutput(outputFileTMP);
 			Process p = pb.start();
 			p.waitFor();
 			BufferedReader outputReader = new BufferedReader(new InputStreamReader(
@@ -286,8 +292,17 @@ public class App {
 			outputReader.close();
 			errorReader.close();
 			p.destroy();
+			
+			FileReader fr = new FileReader(outputFileTMP);
 			FileWriter fw = new FileWriter(outputFilename, true);
-			fw.append("\n");
+			String s;
+		    BufferedReader br = new BufferedReader(fr);
+		    while ((s = br.readLine()) != null) {
+		    	String l = s.replaceAll("-", " ");
+			    fw.append(l+"\n");
+		    }
+		    br.close();
+		    fw.flush();
 			fw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
